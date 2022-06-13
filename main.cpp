@@ -1,10 +1,13 @@
 
+#define VERSION "0.0.1"
+
 #include <iostream>
+#include "game.hpp"
 
 int main() {
-
-	//Speaking of risk
-	std::cout << "Hello 560mg of Caffeine " <<
-	"after two weeks of abstinence FADSHJFDAHSA"
-	" - I meant, uh... world!" << std::endl;
+	
+	std::cout << "Zauberberg - Rift84\n" << 
+	"Version " << VERSION << std::endl;
+	
+	Game game;
 }
