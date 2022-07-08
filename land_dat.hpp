@@ -1,34 +1,19 @@
 
-#define VERSION "0.0.1"
+#include <string>
+#include <array>
+#include <vector>
+#include <pair>
+#pragma once
 
-#include <iostream>
-#include "game.hpp"
+//I know this is really messy but I don't
+//feel like re-typing all the values
 
-#include <fstream>
-
-void genData(std::ostream& os);
-
-int main() {
-
-	std::cout << "Zauberberg - Rift84\n" << 
-	"Version " << VERSION << std::endl;
-
-	std::ofstream dataOut("dat.txt");
-	//dataOut << "Test";
-	genData(dataOut);	
+//Good luck reading this; you'll need it!
 
 
-	Game game;
-}
+//I hope to GOD I typed these in right the first time
+namespace LandData {
 
-
-
-//PLEASE DON'T WRITE CODE LIKE THIS
-//I'm only doing this because I'll never
-//have to do this again
-void genData(std::ostream& os) {
-
-	//This is gonna be a shitshow by the next commit
 	std::array<std::pair<std::string, std::vector<std::string>>, 6> continents {{
 		{"North America", { 	
 
@@ -92,10 +77,7 @@ void genData(std::ostream& os) {
 		}}
 	}};
 
-	//If you're thinking "this is unbearably messy",
-	//that's because it was never meant to be readable lmao
-
-	//Good luck reading this; you'll need it!
+	//Indexed by [continent][territory][index of neighbor (cont, terr) pair]
 	std::array<std::vector<std::vector<std::pair<unsigned, unsigned>>>, 6> data {{
 
 		//North America
@@ -328,18 +310,4 @@ void genData(std::ostream& os) {
 		}
 	}};
 
-
-	
-	//Unpack the values
-	for (int cont = data.size() - 1; cont >= 0; cont--) {
-		for (int terr = data[cont].size() - 1; terr >= 0; terr--) {
-			for (auto nbCord : data[cont][terr]) {
-				//continents.at(nbCord.first).at(nbCord.second).push_back(data.at(cont).at(terr));
-				data.at(nbCord.first).at(nbCord.second).push_back(std::make_pair(cont, terr));
-			}
-		}
-	}
-
-
-	
 }
