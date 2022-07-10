@@ -2,7 +2,8 @@
 #include <string>
 #include <array>
 #include <vector>
-#include <pair>
+#include <utility>
+
 #pragma once
 
 //I know this is really messy but I don't
@@ -14,7 +15,7 @@
 //I hope to GOD I typed these in right the first time
 namespace LandData {
 
-	std::array<std::pair<std::string, std::vector<std::string>>, 6> continents {{
+	std::array<std::pair<std::string, std::vector<std::string>>, 6> LandNames {{
 		{"North America", { 	
 
 			"Alaska", 				//0 0
@@ -217,7 +218,6 @@ namespace LandData {
 			//3 3
 			{
 				{3, 4},
-				{3, 5}
 			},
 			//3 4
 			{

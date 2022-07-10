@@ -1,6 +1,6 @@
 
 #include "land.hpp"
 
-Territoy::addNeighbor(Territory const* territory) {
+void Territory::addNeighbor(Territory* territory) {
 	neighbors.push_back(territory);
 }
