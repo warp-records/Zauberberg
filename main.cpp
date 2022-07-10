@@ -1,5 +1,6 @@
 
-#define VERSION "0.0.1"
+//Technically version 0 ig lol
+#define VERSION "0.0.0"
 
 #include <iostream>
 #include "game.hpp"
