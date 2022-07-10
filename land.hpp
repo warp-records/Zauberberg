@@ -21,6 +21,7 @@ struct Continent {
 
 
 class Territory {
+	//Just exposing the whole class for debugging
 public:
 	std::string const name;
 

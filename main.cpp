@@ -6,8 +6,6 @@
 
 #include <fstream>
 
-void genData(std::ostream& os);
-
 int main() {
 
 	std::cout << "Zauberberg - Rift84\n" << 
@@ -15,28 +13,28 @@ int main() {
 
 	Game game;
 
-	std::string in;
+	//std::string in;
 
-	while (true) {
-		std::cout << "Enter a territory name " <<
+	//while (true) {
+		/*std::cout << "Enter a territory name " <<
 		"and see what territories it borders:" << std::endl;
 
 		std::cin >> in;
-		std::cout << "\n\nNeighbors:\n";
+		std::cout << "\n\nNeighbors:\n";*/
+		std::cout << "Lists of territory neighbors:\n\n";
 
 		for (Continent const& cont : game.getContinents()) {
 			for (Territory const& terr : cont.territories) {
 
-				if (terr.getName() == in) {
-					for (Territory* const neighbor : terr.neighbors) {
-						std::cout << neighbor->getName() << "\n";
-					}
-
-					break;
+				std::cout << "\n" << 
+					terr.getName() << "'s neighbors:" << "\n\n";
+				
+				for (Territory* const neighbor : terr.neighbors) {
+					std::cout << "\t- " << neighbor->getName() << "\n";
 				}
 			}
 		}
 
-		std::cout << "\n" << std::endl;
-	}
+		std::cout << std::endl;
+	//}
 }
