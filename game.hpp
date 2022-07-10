@@ -8,8 +8,10 @@
 
 class Game {
 
-
+	std::vector<Continent> continents;
 
 public:
-	Game();	
+	Game();
+
+	std::vector<Continent> const& getContinents() const { return continents; }
 };
