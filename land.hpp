@@ -5,8 +5,8 @@
 
 #pragma once
 
+/*
 class Territory;
-
 
 class Continent {
 	std::string const name;
@@ -19,12 +19,19 @@ public:
 	Continent(std::string _name, std::vector<Territory> _terr) : 
 		territories{_terr}, name{_name} {};
 	//std::string getName() { return name; }
+};*/
+enum Continent {
+	NorthAmerica,
+	SouthAmerica,
+	Africa,
+	Asia,
+	Europe,
+	Australia
 };
 
 
 
 class Territory {
-	std::string const name;
 
 	//Can't be made const unfortunately
 	std::vector<Territory*> neighbors;
@@ -33,8 +40,11 @@ class Territory {
 	unsigned armyCount = 0;
 
 public:
-	Territory(std::string _name) :
-		name{_name} {};
+	std::string const name;
+	Continent const continent;
+
+	Territory(std::string _name, Continent _cont) :
+		name{_name}, continent{_cont} {};
 
 	//Should only be called during initialization
 	void addNeighbor(Territory*);

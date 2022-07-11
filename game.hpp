@@ -6,12 +6,26 @@
 
 #pragma once
 
-class Game {
-	//?
-	std::vector<Continent> continents;
+enum class Card {
+	Horsemen,
+	Cannon,
+	Soldier,
+	Joker
+};
+
+class Game {	
+	//std::vector<Player> players;
+
+	std::vector<Territory> territories;
+	//std::vector<Card> deck(42);
+
+	//Used during game initialization
+	std::vector<Territory> genLandData();
+
 
 public:
 	Game();
 
-	std::vector<Continent>& getContinents() { return continents; }
+	//std::vector<Territory>& getTerritories() { return territories; }
 };
+
