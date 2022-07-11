@@ -24,13 +24,10 @@ Game::Game() {
 		for (int terr = LandData::data[cont].size() - 1; terr >= 0; terr--) {
 			for (auto nbCord : LandData::data[cont][terr]) {
 
-				continents[cont].territories[terr].addNeighbor(&continents[nbCord.first].territories[nbCord.second]);
-				continents[nbCord.first].territories[nbCord.second].addNeighbor(&continents[cont].territories[terr]);
+				continents[cont].getTerritories()[terr].addNeighbor(&continents[nbCord.first].getTerritories()[nbCord.second]);
+				continents[nbCord.first].getTerritories()[nbCord.second].addNeighbor(&continents[cont].getTerritories()[terr]);
 			}
 		}
 	}
-
-
-
 };
 
