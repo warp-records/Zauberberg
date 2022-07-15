@@ -1,17 +1,17 @@
 
 #include "game.hpp"
 #include "land_dat.hpp"
-//#include <algorithm>
+#include <algorithm>
 #include <map>
 #include <array>
 #include <vector>
 
-Game::Game(/*int numPlayers*/) {
+Game::Game(int numPlayers) {
 	//players = std::vector<Player>(numPlayers)
 
 	territories = genLandData();
 	
-	/*
+	
 	//Initialize deck
 	std::fill(deck.begin(), deck.begin()+13, Card::Horsemen);
 	std::fill(deck.begin()+14, deck.begin()+27, Card::Cannon);
@@ -19,22 +19,27 @@ Game::Game(/*int numPlayers*/) {
 	std::random_shuffle(deck.begin(), deck.end());
 
 
-	std::vector<Territory*> terrPtrStack;
-	for (Continent const& cont : continents) {
-		for (Territory const& terr : continents.get)
-	}
+	std::vector<Territory*> terrPtrs;
+	for (Territory& terr : territories)
+		terrPtrs.push_back(&terr);
 
-	Player* plr = players.begin();
+	std::random_shuffle(terrPtrs.begin(), terrPtrs.end());
+
+
+	auto plr = players.begin();
 
 	//Note: implement card land association later
-	while (!vector.empty()) {
-		plr->cards.push_back(deck.pop_back());
-		plr->
+	while (!deck.empty()) {
+		plr->cards.push_back(deck.back());
+		deck.pop_back();
+
+		plr->ownedTerrs.push_back(terrPtrs.back());
+		terrPtrs.pop_back();
 
 		plr++;
 		if (plr == players.end())
 			plr = players.begin();
-	}*/
+	}
 };
 
 
@@ -73,14 +78,17 @@ std::vector<Territory> Game::genLandData() {
 	
 	//Unpack the neighbor data
 	for (int cont = LandData::data.size() - 1; cont >= 0; cont--) {
-		for (int terr = LandData::data[cont].size() - 1; terr >= 0; terr--) {
-			for (auto nbCord : LandData::data[cont][terr]) {
+		for (int terr = LandData::data.at(cont).size() - 1; terr >= 0; terr--) {
+			for (auto nbCord : LandData::data.at(cont).at(terr)) {
 
-				territories[contNumOffs.at(cont)+terr].addNeighbor(&territories[contNumOffs.at(nbCord.first)+nbCord.second]);
-				territories[contNumOffs.at(nbCord.first)+nbCord.second].addNeighbor(&territories[contNumOffs.at(cont)+terr]);
+				territories.at(contNumOffs.at(cont)+terr).addNeighbor(&territories.at(contNumOffs.at(nbCord.first)+nbCord.second));
+				territories.at(contNumOffs.at(nbCord.first)+nbCord.second).addNeighbor(&territories.at(contNumOffs.at(cont)+terr));
 			}
 		}
 	}
 
 	return territories;
 }
+
+
+//condition 1 cont == 0 && terr == 0

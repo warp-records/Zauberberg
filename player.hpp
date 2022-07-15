@@ -1,19 +1,23 @@
+
 #include "land.hpp"
 #include "color.hpp"
-
+#include "card.hpp"
 
 #include <vector>
 
 #pragma once
 
-class Player {
+struct Player {
 	Color const color;
-	std::vector<Territory*> territories;
+	std::vector<Territory*> ownedTerrs;
+	std::vector<Card> cards;
 
+	/*
 	unsigned armyEntitlement = 0;
 	unsigned armyCount = 5;
+	*/
 
-public:
-	Player(Color _color, std::vector<Territory*> _terr) : 
-		color{_color}, territories{_terr} {};
+	/*
+	Player(Color _color) : 
+		color{_color} ();*/
 };
