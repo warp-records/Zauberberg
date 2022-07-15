@@ -21,6 +21,6 @@ class Game {
 public:
 	Game(int numPlayers);
 
-	//std::vector<Territory>& getTerritories() { return territories; }
+	std::vector<Territory>& getTerritories() { return territories; }
 };
 

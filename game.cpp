@@ -8,9 +8,11 @@
 
 Game::Game(int numPlayers) {
 	//players = std::vector<Player>(numPlayers)
+	if (numPlayers < 1 || 6 < numPlayers)
+		throw std::exception();
 
 	territories = genLandData();
-	
+
 	
 	//Initialize deck
 	std::fill(deck.begin(), deck.begin()+13, Card::Horsemen);
@@ -25,6 +27,11 @@ Game::Game(int numPlayers) {
 
 	std::random_shuffle(terrPtrs.begin(), terrPtrs.end());
 
+	for (int i = 0; i < numPlayers; i++) {
+		//Will initialize a Player whose color is
+		//the n'th index of enum Color
+		players.push_back(Player{ static_cast<Color>(i) });
+	}
 
 	auto plr = players.begin();
 
@@ -89,6 +96,3 @@ std::vector<Territory> Game::genLandData() {
 
 	return territories;
 }
-
-
-//condition 1 cont == 0 && terr == 0
