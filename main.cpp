@@ -31,7 +31,7 @@ void printTerrNeighbors() {
 		"'s neighbors:\n";
 
 
-		for (auto nbPtr : terr.getNeighbors()) {
+		for (auto nbPtr : terr.neighbors) {
 			std::cout << "\n\t- " << nbPtr->name;
 		}
 	}

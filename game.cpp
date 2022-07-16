@@ -47,6 +47,8 @@ Game::Game(int numPlayers) {
 		if (plr == players.end())
 			plr = players.begin();
 	}
+
+	
 };
 
 
@@ -88,8 +90,8 @@ std::vector<Territory> Game::genLandData() {
 		for (int terr = LandData::data.at(cont).size() - 1; terr >= 0; terr--) {
 			for (auto nbCord : LandData::data.at(cont).at(terr)) {
 
-				territories.at(contNumOffs.at(cont)+terr).addNeighbor(&territories.at(contNumOffs.at(nbCord.first)+nbCord.second));
-				territories.at(contNumOffs.at(nbCord.first)+nbCord.second).addNeighbor(&territories.at(contNumOffs.at(cont)+terr));
+				territories.at(contNumOffs.at(cont)+terr).neighbors.push_back(&territories.at(contNumOffs.at(nbCord.first)+nbCord.second));
+				territories.at(contNumOffs.at(nbCord.first)+nbCord.second).neighbors.push_back(&territories.at(contNumOffs.at(cont)+terr));
 			}
 		}
 	}

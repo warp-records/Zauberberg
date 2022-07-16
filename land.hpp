@@ -31,29 +31,22 @@ enum Continent {
 
 
 
-class Territory {
-
-	//Can't be made const unfortunately
-	std::vector<Territory*> neighbors;
+struct Territory {
+	std::string const name;
+	Continent const continent;
 
 	Color ownerColor = Color::Neutral;
 	unsigned armyCount = 0;
 
-public:
-	std::string const name;
-	Continent const continent;
+	//Members should only be added and removed during
+	//game initialization; unfortunately, can't be made const
+	std::vector<Territory*> neighbors;
 
 	Territory(std::string _name, Continent _cont) :
-		name{_name}, continent{_cont} {};
+	name{_name}, continent{_cont} {};
 
-	//Should only be called during initialization
-	void addNeighbor(Territory*);
-
-	unsigned getArmyCount() const { return armyCount; }
-	Color getColor() const { return ownerColor; }
-	std::vector<Territory*>& getNeighbors()  { return neighbors; }
-
-
-	std::string getName() const { return name; }
+	
+	//I forget... do I need to remove this?
+	//std::vector<Territory*>& getNeighbors()  { return neighbors; }
 
 };
