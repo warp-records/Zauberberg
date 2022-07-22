@@ -9,7 +9,8 @@
 
 struct Player {
 	Color const color;
-	
+	int ownedArmies = 0;
+
 	std::vector<Territory*> ownedTerrs;
 	std::vector<Card> cards;
 

@@ -40,7 +40,11 @@ Game::Game(int numPlayers) {
 	//Note: implement card land association later
 	//See "The Setup" section of Risk booklet
 	while (!terrPtrs.empty()) {
-		plr->ownedTerrs.push_back(terrPtrs.back());
+		Territory* terr = terrPtrs.back();
+		terr->armyCount = 1;
+		terr->ownerColor = plr->color;
+
+		plr->ownedTerrs.push_back(terr);
 		terrPtrs.pop_back();
 
 		plr++;
@@ -51,6 +55,12 @@ Game::Game(int numPlayers) {
 	
 };
 
+
+//THIS is where the fun begins!
+void Game::doTurn() {
+	
+
+}
 
 
 
