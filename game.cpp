@@ -18,8 +18,10 @@ Game::Game(int numPlayers) {
 	std::fill(deck.begin(), deck.begin()+13, Card::Horsemen);
 	std::fill(deck.begin()+14, deck.begin()+27, Card::Cannon);
 	std::fill(deck.begin()+28, deck.begin()+41, Card::Soldier);
-	std::random_shuffle(deck.begin(), deck.end());
+	deck.push_back(Card::Joker);
+	deck.push_back(Card::Joker);
 
+	std::random_shuffle(deck.begin(), deck.end());
 
 	std::vector<Territory*> terrPtrs;
 	for (Territory& terr : territories)
@@ -36,10 +38,8 @@ Game::Game(int numPlayers) {
 	auto plr = players.begin();
 
 	//Note: implement card land association later
-	while (!deck.empty()) {
-		plr->cards.push_back(deck.back());
-		deck.pop_back();
-
+	//See "The Setup" section of Risk booklet
+	while (!terrPtrs.empty()) {
 		plr->ownedTerrs.push_back(terrPtrs.back());
 		terrPtrs.pop_back();
 
