@@ -1,6 +1,7 @@
 
 #include "game.hpp"
 #include "land_dat.hpp"
+#include <iostream>
 #include <algorithm>
 #include <map>
 #include <array>
@@ -44,7 +45,7 @@ Game::Game(int numPlayers) {
 		terr->armyCount = 1;
 		terr->ownerColor = plr->color;
 
-		plr->ownedTerrs.push_back(terr);
+		plr->terrs.push_back(terr);
 		terrPtrs.pop_back();
 
 		plr++;
@@ -58,15 +59,28 @@ Game::Game(int numPlayers) {
 
 //THIS is where the fun begins!
 void Game::doTurn() {
-	
+	/*
+	int armyEntitlement = std::max(static_cast<int>(players[turnNum].terrs.size() / 3), 3);
+	for (int i = 0; i < armyEntitlement; i++) {
+		//std::pair<int, int> input = 
+	}
+	*/
 
+
+	//End of turn code
+	/*turnColor = static_cast<Color>(static_cast<int>(turnColor) + 1);
+	if (static_cast<int>(turnColor) > players.size())
+		turnColor = static_cast<Color>(0);*/
 }
 
 
 
 
+//Just try to ignore all this code because it's garbage
+//If you're affiliated with a corporation and you're looking
+//through this as a part of some hiring process, PLEASE IGNORE
+//IT I SWEAR I'M BETTER THAN THERE'S A REASON WHY I DID THIS
 std::vector<Territory> Game::genLandData() {
-	//Just try to ignore all this code because it's garbage
 	std::vector<Territory> territories;
 
 	std::map<std::string, Continent> const contNameMap {

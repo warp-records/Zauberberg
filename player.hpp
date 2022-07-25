@@ -9,10 +9,11 @@
 
 struct Player {
 	Color const color;
-	int ownedArmies = 0;
+	//int ownedArmies = 0;
 
-	std::vector<Territory*> ownedTerrs;
+	std::vector<Territory*> terrs;
 	std::vector<Card> cards;
+
 
 	/*
 	unsigned armyEntitlement = 0;

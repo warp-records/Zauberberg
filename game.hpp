@@ -14,7 +14,7 @@ class Game {
 	std::vector<Territory> territories;
 	std::vector<Card> deck = std::vector<Card>(42);
 
-	Color turnColor = Color::Neutral;
+	int turnNum = 0;
 
 	//Used during game initialization
 	std::vector<Territory> genLandData();
@@ -26,6 +26,16 @@ public:
 	void doTurn();
 
 	std::vector<Territory>& getTerritories() { return territories; }
-	Color getTurnColor() { return turnColor; }
+	Color getTurnColor() { return static_cast<Color>(turnNum); }
+
+
+
+	//Weird, temporary debug IO:
+	//Territory no, num armies
+	/*
+	std::pair<int, int> promptArmies() {
+		std::out << "Enter where you would like to place armies:" <<
+		"\nOptions: ";
+	}*/
 };
 
