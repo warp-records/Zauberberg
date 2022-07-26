@@ -42,7 +42,7 @@ struct User : public Player {
 
 private:
 	//Human IO
-	Command* promptPlaceArmies();
+	Command* promptPlaceArmies(Game& game);
 };
 
 //One day

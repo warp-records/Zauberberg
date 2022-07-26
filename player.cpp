@@ -3,8 +3,9 @@
 #include "command.hpp"
 #include "player.hpp"
 
-Command* User::promptPlaceArmies() {
-	std::cout << "Where would you like to place your armies?\n";
+Command* User::promptPlaceArmies(Game& game) {
+	std::cout << name << "'s turn:\n" <<
+	"Where would you like to place your armies?" << std::endl;
 
 	std::string terrName;
 	std::cin >> terrName;
@@ -20,21 +21,29 @@ Command* User::promptPlaceArmies() {
 		{}, &Territory::name);
 	*/
 
-    Territory* terr = *std::find_if(terrs.begin(), terrs.end(), 
-        [&terrName](Territory const* terr) { return terr->name == terrName; });
+    Territory* terr = &(*std::find_if(
+    	game.getTerritories().begin(), 
+    	game.getTerritories().end(), 
+
+        [&terrName](Territory& searchTerr) {
+        	return searchTerr.name == terrName; 
+        }));
 
 	return new PlaceArmy(this, terr, numArmies);
 }
 
 Command* User::getCommand(Game& game) {
-		if (commandError)
+		std::cout << "\n";
+		
+		if (commandError) {
 			std::cout << "The previous command yielded" << 
 				" an error; try again." << std::endl;
+		}
 
 		switch (game.getTurnState()) {
 
 			case (TurnPhase::PlacingArmies): {
-				return promptPlaceArmies();
+				return promptPlaceArmies(game);
 			};
 
 			default: {

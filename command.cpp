@@ -15,6 +15,7 @@ bool PlaceArmy::Execute(Game& game) {
 		return false;
 
 	terr->armies += numArmies;
+	player->armies -= numArmies;
 
 	return true;
 }

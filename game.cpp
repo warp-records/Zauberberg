@@ -44,7 +44,7 @@ Game::Game(int numPlayers) {
 
 	for (int i = 0; i < numPlayers; i++) {
 		//Just (human) user for now
-		players.push_back(std::make_unique<User>("Player" + i, static_cast<Color>(i)));
+		players.push_back(std::make_unique<User>("Player " + std::to_string(i + 1), static_cast<Color>(i)));
 	}
 
 	auto plr = players.begin();
@@ -79,7 +79,7 @@ void Game::doTurn() {
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
 		bool successState = cmd->Execute(*this);
 
-		plr->commandError = successState;
+		plr->commandError = !successState;
 	}
 	
 
