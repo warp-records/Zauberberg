@@ -9,7 +9,8 @@
 #pragma once
 
 class Game {
-	std::vector<Player> players;
+	//TODO: prevent memory leaks
+	std::vector<Player*> players;
 
 	std::vector<Territory> territories;
 	std::vector<Card> deck = std::vector<Card>(42);

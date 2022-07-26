@@ -31,9 +31,8 @@ Game::Game(int numPlayers) {
 	std::random_shuffle(terrPtrs.begin(), terrPtrs.end());
 
 	for (int i = 0; i < numPlayers; i++) {
-		//Will initialize a Player whose color is
-		//the n'th index of enum Color
-		players.push_back(Player{ static_cast<Color>(i) });
+		//Just (human) user for now
+		players.push_back(new User("Player" + i, static_cast<Color>(i)));
 	}
 
 	auto plr = players.begin();
@@ -43,9 +42,9 @@ Game::Game(int numPlayers) {
 	while (!terrPtrs.empty()) {
 		Territory* terr = terrPtrs.back();
 		terr->armyCount = 1;
-		terr->ownerColor = plr->color;
+		terr->ownerColor = (*plr)->color;
 
-		plr->terrs.push_back(terr);
+		(*plr)->terrs.push_back(terr);
 		terrPtrs.pop_back();
 
 		plr++;
@@ -60,17 +59,26 @@ Game::Game(int numPlayers) {
 //THIS is where the fun begins!
 void Game::doTurn() {
 	/*
-	int armyEntitlement = std::max(static_cast<int>(players[turnNum].terrs.size() / 3), 3);
-	for (int i = 0; i < armyEntitlement; i++) {
-		//std::pair<int, int> input = 
+	Player* plr = players[turnNum];
+
+	int armies = std::max(static_cast<int>(plr->terrs.size() / 3), 3);
+	while (armies > 0) {
+		
+		std::cout << "Placing armies; ";
+		std::string terrName = plr->selectTerr();
+
+		if (!plr->ownsTerr(terrName)) throw std::exception();
+
 	}
-	*/
+	
 
 
 	//End of turn code
-	/*turnColor = static_cast<Color>(static_cast<int>(turnColor) + 1);
-	if (static_cast<int>(turnColor) > players.size())
-		turnColor = static_cast<Color>(0);*/
+	if (turnNum == players.size() - 1)
+		turnNum = 0;
+	else
+		turnNum++;
+	*/
 }
 
 
