@@ -5,13 +5,14 @@
 #include "card.hpp"
 #include <vector>
 #include <array>
+#include <memory>
 
 #pragma once
 
 class Game {
 	//TODO: prevent memory leaks
 	//Can we use unique_ptr for this?
-	std::vector<Player*> players;
+	std::vector<std::unique_ptr<Player>> players;
 
 	std::vector<Territory> territories;
 	std::vector<Card> deck = std::vector<Card>(42);
@@ -28,17 +29,8 @@ public:
 	void doTurn();
 
 	std::vector<Territory>& getTerritories() { return territories; }
-	Color getTurnColor() { return static_cast<Color>(turnNum); }
+	Color getTurnColor() const { return static_cast<Color>(turnNum); }
 
-
-
-	//Weird, temporary debug IO:
-	//Territory no, num armies
-	/*
-	std::pair<int, int> promptArmies() {
-		std::out << "Enter where you would like to place armies:" <<
-		"\nOptions: ";
-	}*/
 };
 
 //Misc function

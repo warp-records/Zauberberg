@@ -58,10 +58,13 @@ struct User : public Player {
 		int numArmies;
 		std::cin >> numArmies;
 
-		if (armies < numArmies || armies < 0)
-			throw std::exception();
+		if (armies < numArmies || armies < 0) {
+			std::cout << "Error: you only have " << armies <<
+			" left to use!";
+			return selectNumArmies();
+		}
 
-		return armies;
+		return numArmies;
 	}
 
 };

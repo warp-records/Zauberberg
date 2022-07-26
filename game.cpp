@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include <memory>
 #include <array>
 #include <vector>
 
@@ -14,6 +15,7 @@ auto searchTerrName(
 	return std::find_if(terrs.begin(), terrs.end(), 
 			[&searchName](Territory const* terr) { return terr->name == searchName; });
 }
+
 
 Game::Game(int numPlayers) {
 	//players = std::vector<Player>(numPlayers)
@@ -40,7 +42,7 @@ Game::Game(int numPlayers) {
 
 	for (int i = 0; i < numPlayers; i++) {
 		//Just (human) user for now
-		players.push_back(new User("Player" + i, static_cast<Color>(i)));
+		players.push_back(std::make_unique<User>("Player" + i, static_cast<Color>(i)));
 	}
 
 	auto plr = players.begin();
@@ -60,17 +62,15 @@ Game::Game(int numPlayers) {
 		if (plr == players.end())
 			plr = players.begin();
 	}
-
-	
 };
 
 
 //THIS is where the fun begins!
 void Game::doTurn() {
 	
-	Player* plr = players[turnNum];
+	Player* plr = players[turnNum].get();
 
-	plr->armies = std::max(static_cast<int>(plr->terrs.size() / 3), 3);
+	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
 	while (plr->armies > 0) {
 		
 		std::cout << "Placing armies; ";

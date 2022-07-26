@@ -14,7 +14,7 @@ int main() {
 	std::cout << "Zauberberg - Rift84\n" << 
 	"Version " << VERSION << "\n" << std::endl;
 
-	Game game(2);
+	Game game(1);
 	game.doTurn();
 
 	return 0;
