@@ -2,6 +2,8 @@
 #include "game.hpp"
 #include "land_dat.hpp"
 #include "land.hpp"
+#include "player.hpp"
+#include "command.hpp"
 #include <iostream>
 #include <algorithm>
 #include <map>
@@ -55,7 +57,6 @@ Game::Game(int numPlayers) {
 		terr->ownerColor = (*plr)->color;
 
 		(*plr)->terrs.push_back(terr);
-		(*plr)->armies++;
 		terrPtrs.pop_back();
 
 		plr++;
@@ -71,21 +72,16 @@ void Game::doTurn() {
 	Player* plr = players[turnNum].get();
 
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
+
+	turnState = TurnPhase::PlacingArmies;
+
 	while (plr->armies > 0) {
-		
-		std::cout << "Placing armies; ";
-		std::string terrName = plr->selectTerr();
+		std::unique_ptr<Command> cmd(plr->getCommand(*this));
+		bool successState = cmd->Execute(*this);
 
-		auto terrIt = searchTerrName(plr->terrs, terrName);
-		if (terrIt == plr->terrs.end()) 
-			throw std::exception();
-
-		int numArmies = plr->selectNumArmies();
-		(*terrIt)->armies += numArmies;
-		plr->armies -= numArmies;
+		plr->commandError = successState;
 	}
 	
-
 
 	//End of turn code
 	if (turnNum == players.size() - 1)

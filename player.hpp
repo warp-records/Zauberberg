@@ -2,13 +2,16 @@
 #include "land.hpp"
 #include "color.hpp"
 #include "card.hpp"
-
 #include <vector>
 #include <iostream>
 #include <algorithm>
 
 
 #pragma once
+
+enum class TurnPhase;
+struct Command;
+class Game;
 
 struct Player {
 	std::string const name;
@@ -17,19 +20,10 @@ struct Player {
 	std::vector<Territory*> terrs;
 	std::vector<Card> cards;
 
-	virtual std::string selectTerr() const = 0;
-
+	bool commandError = false;
 	int armies = 0;
-	virtual int selectNumArmies() const = 0;
 
-	//In addition to IO, we can implement move 
-	//validity checks as virtual functions to make 
-	//skip them for AI move generation; this may 
-	//save processing power.
-
-	//I feel like a genius :D
-	//virtual std::vector<Territory*>::iterator ownsTerr(std::string const& terrName) const = 0;
-
+	virtual Command* getCommand(Game& game) = 0;
 
 	Player(std::string const& _name, Color _color) : 
 		name{_name}, color{_color} {};
@@ -38,35 +32,17 @@ struct Player {
 		color{_color} ();*/
 };
 
+
+
 struct User : public Player {
 
 	using Player::Player;
 	
-	//IO
-	std::string selectTerr() const {
-		std::cout << "Select a territory:\n";
+	Command* getCommand(Game& game);
 
-		std::string terr;
-		std::cin >> terr;
-
-		return terr;	
-	}
-
-	int selectNumArmies() const {
-		std::cout << "Select a number of armies:\n";
-
-		int numArmies;
-		std::cin >> numArmies;
-
-		if (armies < numArmies || armies < 0) {
-			std::cout << "Error: you only have " << armies <<
-			" left to use!";
-			return selectNumArmies();
-		}
-
-		return numArmies;
-	}
-
+private:
+	//Human IO
+	Command* promptPlaceArmies();
 };
 
 //One day
