@@ -1,11 +1,19 @@
 
 #include "game.hpp"
 #include "land_dat.hpp"
+#include "land.hpp"
 #include <iostream>
 #include <algorithm>
 #include <map>
 #include <array>
 #include <vector>
+
+auto searchTerrName(
+	std::vector<Territory*> const& terrs, std::string const& searchName) {
+
+	return std::find_if(terrs.begin(), terrs.end(), 
+			[&searchName](Territory const* terr) { return terr->name == searchName; });
+}
 
 Game::Game(int numPlayers) {
 	//players = std::vector<Player>(numPlayers)
@@ -41,10 +49,11 @@ Game::Game(int numPlayers) {
 	//See "The Setup" section of Risk booklet
 	while (!terrPtrs.empty()) {
 		Territory* terr = terrPtrs.back();
-		terr->armyCount = 1;
+		terr->armies = 1;
 		terr->ownerColor = (*plr)->color;
 
 		(*plr)->terrs.push_back(terr);
+		(*plr)->armies++;
 		terrPtrs.pop_back();
 
 		plr++;
@@ -58,17 +67,22 @@ Game::Game(int numPlayers) {
 
 //THIS is where the fun begins!
 void Game::doTurn() {
-	/*
+	
 	Player* plr = players[turnNum];
 
-	int armies = std::max(static_cast<int>(plr->terrs.size() / 3), 3);
-	while (armies > 0) {
+	plr->armies = std::max(static_cast<int>(plr->terrs.size() / 3), 3);
+	while (plr->armies > 0) {
 		
 		std::cout << "Placing armies; ";
 		std::string terrName = plr->selectTerr();
 
-		if (!plr->ownsTerr(terrName)) throw std::exception();
+		auto terrIt = searchTerrName(plr->terrs, terrName);
+		if (terrIt == plr->terrs.end()) 
+			throw std::exception();
 
+		int numArmies = plr->selectNumArmies();
+		(*terrIt)->armies += numArmies;
+		plr->armies -= numArmies;
 	}
 	
 
@@ -78,7 +92,7 @@ void Game::doTurn() {
 		turnNum = 0;
 	else
 		turnNum++;
-	*/
+	
 }
 
 

@@ -1,5 +1,6 @@
 
 #include "color.hpp"
+#include <algorithm>
 #include <vector>
 #include <string>
 
@@ -29,14 +30,12 @@ enum Continent {
 	Australia
 };
 
-
-
 struct Territory {
 	std::string const name;
 	Continent const continent;
 
 	Color ownerColor = Color::Neutral;
-	unsigned armyCount = 0;
+	unsigned armies = 0;
 
 	//Members should only be added and removed during
 	//game initialization; unfortunately, can't be made const
@@ -50,3 +49,4 @@ struct Territory {
 	//std::vector<Territory*>& getNeighbors()  { return neighbors; }
 
 };
+

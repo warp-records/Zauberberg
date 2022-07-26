@@ -10,6 +10,7 @@
 
 class Game {
 	//TODO: prevent memory leaks
+	//Can we use unique_ptr for this?
 	std::vector<Player*> players;
 
 	std::vector<Territory> territories;
@@ -40,3 +41,6 @@ public:
 	}*/
 };
 
+//Misc function
+auto searchTerrName(
+	std::vector<Territory*> const& terrs, std::string const& searchName);

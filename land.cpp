@@ -1,6 +1,4 @@
-
 #include "land.hpp"
 
-void Territory::addNeighbor(Territory* territory) {
-	neighbors.push_back(territory);
-}
+//Search a vector of territory pointers
+//for a territory with a given name

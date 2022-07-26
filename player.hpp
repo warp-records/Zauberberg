@@ -13,19 +13,22 @@
 struct Player {
 	std::string const name;
 	Color const color;
-	//int ownedArmies = 0;
 
 	std::vector<Territory*> terrs;
 	std::vector<Card> cards;
 
-	//virtual std::string selectTerr() const = 0;
+	virtual std::string selectTerr() const = 0;
 
-	//We can implement move validity checks as
-	//virtual functions to make them optional for
-	//an AI; this may save processing power.
+	int armies = 0;
+	virtual int selectNumArmies() const = 0;
+
+	//In addition to IO, we can implement move 
+	//validity checks as virtual functions to make 
+	//skip them for AI move generation; this may 
+	//save processing power.
 
 	//I feel like a genius :D
-	//virtual bool ownsTerr(std::string const& terrName) const = 0;
+	//virtual std::vector<Territory*>::iterator ownsTerr(std::string const& terrName) const = 0;
 
 
 	Player(std::string const& _name, Color _color) : 
@@ -37,7 +40,9 @@ struct Player {
 
 struct User : public Player {
 
-	/*
+	using Player::Player;
+	
+	//IO
 	std::string selectTerr() const {
 		std::cout << "Select a territory:\n";
 
@@ -45,16 +50,20 @@ struct User : public Player {
 		std::cin >> terr;
 
 		return terr;	
-	}*/
+	}
 
-	/*
-	bool ownsTerr(std::string const& searchName) const {
+	int selectNumArmies() const {
+		std::cout << "Select a number of armies:\n";
 
-		return std::find_if(terrs.begin(), terrs.end(), 
-			[&searchName](Territory const* terr) { return terr->name == searchName; }) != terrs.end();
-	}*/
+		int numArmies;
+		std::cin >> numArmies;
 
-	using Player::Player;
+		if (armies < numArmies || armies < 0)
+			throw std::exception();
+
+		return armies;
+	}
+
 };
 
 //One day
