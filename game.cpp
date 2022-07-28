@@ -77,11 +77,20 @@ void Game::doTurn() {
 
 	while (plr->armies > 0) {
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
+
+		if (plr->endTurn)
+			break;
+
 		bool successState = cmd->Execute(*this);
 
 		plr->commandError = !successState;
 	}
+
+
+	//I'm so tired rn lol
+
 	
+
 
 	//End of turn code
 	if (turnNum == players.size() - 1)

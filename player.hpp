@@ -20,6 +20,7 @@ struct Player {
 	std::vector<Territory*> terrs;
 	std::vector<Card> cards;
 
+	bool endTurn = false;
 	bool commandError = false;
 	int armies = 0;
 
@@ -43,6 +44,9 @@ struct User : public Player {
 private:
 	//Human IO
 	Command* promptPlaceArmies(Game& game);
+	Command* promptFreeMove(Game& game);
+
+	Territory* terrFromStr(Game& game, std::string const& name);
 };
 
 //One day

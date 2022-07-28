@@ -12,6 +12,7 @@
 
 enum class TurnPhase {
 	PlacingArmies,
+	FreeMove,
 	None
 };
 
