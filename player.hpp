@@ -24,6 +24,9 @@ struct Player {
 	bool commandError = false;
 	int armies = 0;
 
+	//For defend command only
+	int numDiceUsing;
+
 	virtual Command* getCommand(Game& game) = 0;
 
 	Player(std::string const& _name, Color _color) : 
@@ -45,6 +48,8 @@ private:
 	//Human IO
 	Command* promptPlaceArmies(Game& game);
 	Command* promptFreeMove(Game& game);
+	Command* promptAttacking(Game& game);
+	Command* promptDefending(Game& game);
 
 	Territory* terrFromStr(Game& game, std::string const& name);
 };

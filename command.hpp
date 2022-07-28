@@ -57,3 +57,33 @@ struct FreeMove : Command {
 
 	bool Execute(Game& game);
 };
+
+
+
+//Calls defend
+struct AttackInit : Command {
+	Player* player;
+
+	Territory* origin;
+	Territory* dest;
+	unsigned numArmies;
+
+	AttackInit(Player* player_, Territory* origin_, 
+	Territory* dest_, unsigned numArmies_) :
+	player{player_}, origin{origin_}, dest{dest_},
+	numArmies{numArmies_} {};
+
+	bool Execute(Game& game);
+};
+
+//Calls attack execute
+struct Defend : Command {
+	Player* player;
+
+	Territory* attacker;
+
+	bool Execute(Game& game);
+}
+
+//Finishes attack
+struct AttackExec : Command {};

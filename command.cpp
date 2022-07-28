@@ -2,6 +2,8 @@
 #include "land.hpp"
 #include "player.hpp"
 #include "command.hpp"
+#include <algorithm>
+#include <random>
 
 class Game;
 
@@ -33,6 +35,33 @@ bool FreeMove::Execute(Game& game) {
 
 	origin->armies -= numArmies;
 	dest->armies += numArmies;
+
+	return true;
+}
+
+bool AttackInit::Execute(Game& game) {
+	if (attacker->armies - numArmies < 1)
+		return false;
+
+	if (attacker->ownerColor != player->color)
+		return false;
+
+	if (attacker->ownerColor == defender->ownerColor)
+		return false;
+
+	if (std::find(attacker->neighbors.begin(), 
+		attacker->neighbors.end(), defender) == attacker->neighbors.end()) {
+		return false;
+	}
+
+	
+}
+
+bool AttackExec::Execute(Game& game);
+
+
+bool Defend::Execute(Game& game) {
+
 
 	return true;
 }

@@ -13,12 +13,11 @@
 enum class TurnPhase {
 	PlacingArmies,
 	FreeMove,
+	Attack,
 	None
 };
 
 class Game {
-	//TODO: prevent memory leaks
-	//Can we use unique_ptr for this?
 	std::vector<std::unique_ptr<Player>> players;
 
 	std::vector<Territory> territories;
@@ -27,9 +26,14 @@ class Game {
 	TurnPhase turnState = TurnPhase::None;
 	int turnNum = 0;
 
+	//Apparently this is the simplest way
+	//to use C++'s modern random library lol..
+	std::random_device rd;
+	std::mt19937 gne(rd);
+	std::uniform_int_distribtuion<> die(1, 6);
+
 	//Used during game initialization
 	std::vector<Territory> genLandData();
-
 
 public:
 	Game(int numPlayers);
@@ -40,6 +44,8 @@ public:
 	//Color getTurnColor() const { return static_cast<Color>(turnNum); }
 
 	TurnPhase getTurnState() { return turnState; };
+
+	int rollDie() { return die(gen); }
 };
 
 //Misc function

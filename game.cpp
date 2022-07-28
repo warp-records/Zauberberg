@@ -71,6 +71,8 @@ void Game::doTurn() {
 	
 	Player* plr = players[turnNum].get();
 
+
+
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
 	turnState = TurnPhase::PlacingArmies;
 
@@ -79,19 +81,24 @@ void Game::doTurn() {
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
 	}
+	plr->commandError = false;
 
-	//BUT NOT NOW!
 
 
 	turnState = TurnPhase::FreeMove;
 
-	do {
+	while (!plr->endTurn && plr->commandError) {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
+	}
 
-	} while (!plr->endTurn && plr->commandError);
 
+
+	//Attack mode >:D	
+	turnState = TurnPhase::Attack;
+	
+	//while () {};
 
 	//End of turn code
 	if (turnNum == players.size() - 1)
