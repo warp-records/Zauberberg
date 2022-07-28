@@ -27,11 +27,10 @@ Command* User::getCommand(Game& game) {
 		case (TurnPhase::PlacingArmies): {
 			return promptPlaceArmies(game);
 		};
-/*
+
 		case (TurnPhase::FreeMove): {
 			return promptFreeMove(game);
 		};
-*/
 
 		default: {
 			std::cerr << "Error: invalid turn state; terminating." << 
@@ -51,7 +50,8 @@ Command* User::promptPlaceArmies(Game& game) {
 	std::string terrName;
 	std::cin >> terrName;
 
-	std::cout << "How many armies would you like to palce?\n";
+	std::cout << "How many armies would you like to palce?" 
+		"\t(" << armies << " armies left)" << std::endl;
 
 	unsigned numArmies;
 	std::cin >> numArmies;
@@ -61,7 +61,7 @@ Command* User::promptPlaceArmies(Game& game) {
 	return new PlaceArmy(this, terr, numArmies);
 }
 
-/*
+
 Command* User::promptFreeMove(Game& game) {
 	std::cout << "\n";
 
@@ -77,7 +77,9 @@ Command* User::promptFreeMove(Game& game) {
 	} else if (choice != 'y') {
 		commandError = true;
 
+		//Why does this error?
 		//return new getCommand(game);
+		return promptFreeMove(game);
 	}
 
 	std::cout << "\nWhat territory would you like to " <<
@@ -105,7 +107,7 @@ Command* User::promptFreeMove(Game& game) {
 
 	return new FreeMove(this, originPtr, destPtr, numArmies);
 }
-*/
+
 
 Territory* User::terrFromStr(Game& game, std::string const& name) {
 	//Use post C++20

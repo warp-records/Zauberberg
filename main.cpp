@@ -1,6 +1,6 @@
 
 
-#define VERSION "0.0.2"
+#define VERSION "0.0.3"
 
 #include <iostream>
 #include "game.hpp"
@@ -15,6 +15,7 @@ int main() {
 	"Version " << VERSION << "\n" << std::endl;
 
 	Game game(2);
+	game.doTurn();
 	game.doTurn();
 
 	return 0;

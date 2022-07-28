@@ -25,7 +25,7 @@ bool FreeMove::Execute(Game& game) {
 	if (dest->ownerColor != player->color)
 		return false;
 
-	if (numArmies >= origin->armies)
+	if (origin->armies - numArmies < 1)
 		return false;
 
 	if (dest == origin)

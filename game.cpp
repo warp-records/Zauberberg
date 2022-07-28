@@ -72,24 +72,25 @@ void Game::doTurn() {
 	Player* plr = players[turnNum].get();
 
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
-
 	turnState = TurnPhase::PlacingArmies;
 
-	while (plr->armies > 0) {
+	while (plr->armies > 0 && !plr->endTurn) {
+
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
-
-		if (plr->endTurn)
-			break;
-
-		bool successState = cmd->Execute(*this);
-
-		plr->commandError = !successState;
+		plr->commandError = !cmd->Execute(*this);
 	}
 
+	//BUT NOT NOW!
 
-	//I'm so tired rn lol
 
-	
+	turnState = TurnPhase::FreeMove;
+
+	do {
+
+		std::unique_ptr<Command> cmd(plr->getCommand(*this));
+		plr->commandError = !cmd->Execute(*this);
+
+	} while (!plr->endTurn && plr->commandError);
 
 
 	//End of turn code
