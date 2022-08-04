@@ -6,6 +6,7 @@
 #include "command.hpp"
 #include <iostream>
 #include <algorithm>
+#include <random>
 #include <map>
 #include <memory>
 #include <array>
@@ -17,6 +18,8 @@ auto searchTerrName(
 	return std::find_if(terrs.begin(), terrs.end(), 
 			[&searchName](Territory const* terr) { return terr->name == searchName; });
 }
+
+
 
 
 Game::Game(int numPlayers) {
@@ -54,7 +57,7 @@ Game::Game(int numPlayers) {
 	while (!terrPtrs.empty()) {
 		Territory* terr = terrPtrs.back();
 		terr->armies = 1;
-		terr->ownerColor = (*plr)->color;
+		terr->owner = plr->get();
 
 		(*plr)->terrs.push_back(terr);
 		terrPtrs.pop_back();
@@ -76,6 +79,7 @@ void Game::doTurn() {
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
 	turnState = TurnPhase::PlacingArmies;
 
+	//Are they allowed to end their turn in this?
 	while (plr->armies > 0 && !plr->endTurn) {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
@@ -87,18 +91,43 @@ void Game::doTurn() {
 
 	turnState = TurnPhase::FreeMove;
 
-	while (!plr->endTurn && plr->commandError) {
+	//Is this buging?
+	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
-	}
+	} while (!plr->endTurn && plr->commandError);
 
 
 
 	//Attack mode >:D	
-	turnState = TurnPhase::Attack;
 	
-	//while () {};
+	do {
+		turnState = TurnPhase::AttackInit;
+
+		std::unique_ptr<Command> cmd(plr->getCommand(*this));
+		plr->commandError = !cmd->Execute(*this);
+
+		if (plr->commandError) {
+			continue;
+		} else if (plr->endTurn) {
+			break;
+		}
+
+
+		Player* targetPlr = attackState.target->owner;
+
+		turnState = TurnPhase::DefendInit;
+		do {
+			std::unique_ptr<Command> cmd(targetPlr->getCommand(*this));
+			targetPlr->commandError = !cmd->Execute(*this);
+
+		} while (targetPlr->commandError);
+
+		//Attack logic
+		//...
+
+	} while (true);
 
 	//End of turn code
 	if (turnNum == players.size() - 1)
@@ -114,7 +143,7 @@ void Game::doTurn() {
 //Just try to ignore all this code because it's garbage
 //If you're affiliated with a corporation and you're looking
 //through this as a part of some hiring process, PLEASE IGNORE
-//IT I SWEAR I'M BETTER THAN THERE'S A REASON WHY I DID THIS
+//IT I SWEAR I'M BETTER THAN THIS I CAN EXPLAIN
 std::vector<Territory> Game::genLandData() {
 	std::vector<Territory> territories;
 
@@ -156,4 +185,17 @@ std::vector<Territory> Game::genLandData() {
 	}
 
 	return territories;
+}
+
+
+int Game::rollDie() { 
+	//Apparently this is the simplest way
+	//to use C++'s modern random library lol..
+	//std::random_device rd;
+	//std::mt19937 gen(rd);
+	//std::uniform_int_distribution<> die(1, 6);
+
+	//return die(gen);
+
+	return rand() % 6 + 1; 
 }

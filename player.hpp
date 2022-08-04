@@ -29,6 +29,7 @@ struct Player {
 
 	virtual Command* getCommand(Game& game) = 0;
 
+
 	Player(std::string const& _name, Color _color) : 
 		name{_name}, color{_color} {};
 	/*
@@ -48,10 +49,13 @@ private:
 	//Human IO
 	Command* promptPlaceArmies(Game& game);
 	Command* promptFreeMove(Game& game);
-	Command* promptAttacking(Game& game);
-	Command* promptDefending(Game& game);
+	Command* promptAttack(Game& game);
+	Command* promptDefend(Game& game);
 
 	Territory* terrFromStr(Game& game, std::string const& name);
+
+	//Consider implementing later
+	//bool promptContinueTurn(std::string const& message);
 };
 
 //One day

@@ -21,6 +21,8 @@ public:
 		territories{_terr}, name{_name} {};
 	//std::string getName() { return name; }
 };*/
+struct Player;
+
 enum Continent {
 	NorthAmerica,
 	SouthAmerica,
@@ -34,7 +36,7 @@ struct Territory {
 	std::string const name;
 	Continent const continent;
 
-	Color ownerColor = Color::Neutral;
+	Player* owner;
 	unsigned armies = 0;
 
 	//Members should only be added and removed during

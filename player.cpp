@@ -32,6 +32,10 @@ Command* User::getCommand(Game& game) {
 			return promptFreeMove(game);
 		};
 
+		case (TurnPhase::AttackInit): {
+			return promptAttack(game);
+		};
+
 		default: {
 			std::cerr << "Error: invalid turn state; terminating." << 
 				std::endl;
@@ -39,8 +43,6 @@ Command* User::getCommand(Game& game) {
 		}
 	}
 }
-
-
 
 
 Command* User::promptPlaceArmies(Game& game) {
@@ -63,9 +65,7 @@ Command* User::promptPlaceArmies(Game& game) {
 
 
 Command* User::promptFreeMove(Game& game) {
-	std::cout << "\n";
-
-	std::cout << "Would you like to use a free move? (y/n)" <<
+	std::cout << "\nWould you like to use a free move? (y/n)" <<
 		std::endl;
 
 	char choice;
@@ -77,8 +77,6 @@ Command* User::promptFreeMove(Game& game) {
 	} else if (choice != 'y') {
 		commandError = true;
 
-		//Why does this error?
-		//return new getCommand(game);
 		return promptFreeMove(game);
 	}
 
@@ -106,6 +104,59 @@ Command* User::promptFreeMove(Game& game) {
 
 
 	return new FreeMove(this, originPtr, destPtr, numArmies);
+}
+
+Command* User::promptAttack(Game& game) {
+	std::cout << "Would you like attack? (y/n)" <<
+		std::endl;
+
+	char choice;
+	std::cin >> choice;
+
+	if (choice == 'n') {
+		return new EndTurn(this);
+
+	} else if (choice != 'y') {
+		commandError = true;
+
+		return promptAttack(game);
+	}
+
+	std::cout << "\nWhat territory would you like to " <<
+		"attack from?" << std::endl;
+
+	std::string origin;
+	std::cin >> origin;
+
+	std::cout << "\nWhat territory do you want to attack?"
+		 << std::endl;
+
+	std::string target;
+	std::cin >> target;
+
+	std::cout << "\nHow many die would you like to " <<
+		"attack with?" << std::endl;
+
+	unsigned numDie;
+	std::cin >> numDie;
+
+
+	Territory* originPtr = terrFromStr(game, origin);
+	Territory* targetPtr = terrFromStr(game, target);
+
+	return new AttackInit(this, originPtr, targetPtr, numDie);
+}
+
+
+Command* User::promptDefend(Game& game) {
+
+	std::cout << "\nHow many die would you like to " <<
+	"defend with?" << std::endl;
+
+	unsigned numDie;
+	std::cin >> numDie;
+
+	return new DefendInit(this, numDie);
 }
 
 

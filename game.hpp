@@ -3,17 +3,19 @@
 #include "land.hpp"
 #include "player.hpp"
 #include "card.hpp"
-#include "command.hpp"
+//#include "command.hpp"
 #include <vector>
 #include <array>
 #include <memory>
+#include <random>
 
 #pragma once
 
 enum class TurnPhase {
 	PlacingArmies,
 	FreeMove,
-	Attack,
+	AttackInit,
+	DefendInit,
 	None
 };
 
@@ -26,16 +28,18 @@ class Game {
 	TurnPhase turnState = TurnPhase::None;
 	int turnNum = 0;
 
-	//Apparently this is the simplest way
-	//to use C++'s modern random library lol..
-	std::random_device rd;
-	std::mt19937 gne(rd);
-	std::uniform_int_distribtuion<> die(1, 6);
-
 	//Used during game initialization
 	std::vector<Territory> genLandData();
 
 public:
+	struct ATKST {
+		Territory* origin;
+		Territory* target;
+
+		unsigned attackDie;
+		unsigned defendDie;
+	} attackState;
+
 	Game(int numPlayers);
 
 	void doTurn();
@@ -45,7 +49,7 @@ public:
 
 	TurnPhase getTurnState() { return turnState; };
 
-	int rollDie() { return die(gen); }
+	int rollDie();
 };
 
 //Misc function

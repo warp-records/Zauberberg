@@ -2,13 +2,14 @@
 #include "land.hpp"
 #include "player.hpp"
 #include "command.hpp"
+#include "game.hpp"
 #include <algorithm>
 #include <random>
 
 class Game;
 
 bool PlaceArmy::Execute(Game& game) {
-	if (player->color != terr->ownerColor)
+	if (terr->owner != player)
 		return false;
 
 	if (numArmies > player->armies)
@@ -21,10 +22,10 @@ bool PlaceArmy::Execute(Game& game) {
 }
 
 bool FreeMove::Execute(Game& game) {
-	if (origin->ownerColor != player->color)
+	if (origin->owner != player)
 		return false;
 	
-	if (dest->ownerColor != player->color)
+	if (dest->owner != player)
 		return false;
 
 	if (origin->armies - numArmies < 1)
@@ -40,28 +41,42 @@ bool FreeMove::Execute(Game& game) {
 }
 
 bool AttackInit::Execute(Game& game) {
-	if (attacker->armies - numArmies < 1)
+	if (origin->armies == 1)
 		return false;
 
-	if (attacker->ownerColor != player->color)
-		return false;
-
-	if (attacker->ownerColor == defender->ownerColor)
-		return false;
-
-	if (std::find(attacker->neighbors.begin(), 
-		attacker->neighbors.end(), defender) == attacker->neighbors.end()) {
+	if (numDie == 0 || 
+		numDie > std::min(origin->armies - 1, 3u)) {
 		return false;
 	}
 
-	
+	if (origin->owner != player)
+		return false;
+
+	if (std::find(origin->neighbors.begin(), 
+		origin->neighbors.end(), target) == origin->neighbors.end()) {
+		return false;
+	}
+
+	if (target->owner == player)
+		return false;
+
+	game.attackState = {
+		origin, target, numDie, 0
+	};
+
+	return true;
 }
 
-bool AttackExec::Execute(Game& game);
+//bool AttackExec::Execute(Game& game);
 
 
-bool Defend::Execute(Game& game) {
+bool DefendInit::Execute(Game& game) {
+	if (numDie == 0 || 
+		numDie > std::min(game.attackState.target->armies - 1, 2u)) {
+		return false;
+	}
 
+	game.attackState.defendDie = numDie;
 
 	return true;
 }

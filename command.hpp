@@ -65,25 +65,25 @@ struct AttackInit : Command {
 	Player* player;
 
 	Territory* origin;
-	Territory* dest;
-	unsigned numArmies;
+	Territory* target;
+	unsigned numDie;
 
 	AttackInit(Player* player_, Territory* origin_, 
-	Territory* dest_, unsigned numArmies_) :
-	player{player_}, origin{origin_}, dest{dest_},
-	numArmies{numArmies_} {};
+		Territory* target_, unsigned numDie_) :
+		player{player_}, origin{origin_}, target{target_},
+		numDie{numDie_} {};
 
 	bool Execute(Game& game);
 };
 
 //Calls attack execute
-struct Defend : Command {
+struct DefendInit : Command {
 	Player* player;
 
-	Territory* attacker;
+	unsigned numDie;
+
+	DefendInit(Player* player_, unsigned numDie_) :
+		player{player_}, numDie{numDie_} {};
 
 	bool Execute(Game& game);
-}
-
-//Finishes attack
-struct AttackExec : Command {};
+};
