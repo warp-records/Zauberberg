@@ -20,8 +20,6 @@ auto searchTerrName(
 }
 
 
-
-
 Game::Game(int numPlayers) {
 	//players = std::vector<Player>(numPlayers)
 	if (numPlayers < 1 || 6 < numPlayers)
@@ -91,7 +89,6 @@ void Game::doTurn() {
 
 	turnState = TurnPhase::FreeMove;
 
-	//Is this buging?
 	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
@@ -124,8 +121,7 @@ void Game::doTurn() {
 
 		} while (targetPlr->commandError);
 
-		//Attack logic
-		//...
+		
 
 	} while (true);
 
@@ -138,6 +134,62 @@ void Game::doTurn() {
 }
 
 
+
+/*Note: game rules force the territory a victor
+was attacking from to become unoccupied if the victor
+attacked with one more die than the attacking
+territory, and lost one army during the battle; this
+flaw was remedied in the implementation. Look into this 
+more online.*/
+
+void Game::attack() {
+	std::vector<int> attackRolls;
+	std::vector<int> defendRolls;
+
+	for (int i = 0; i < attackState.attackDie; i++)
+		attackRolls.push_back(rollDie());
+	
+	for (int i = 0; i < attackState.defendDie; i++)
+		defendRolls.push_back(rollDie());
+
+
+	for (int i = 0; i < attackState.defendDie; i++) {
+
+		auto maxAtk = std::max_element(attackRolls.begin(),
+				attackRolls.end());
+		auto maxDf = std::max_element(defendRolls.begin(),
+			defendRolls.end());
+
+		if (*maxAtk > *maxDf)
+			attackState.target->armies--;
+		else
+			attackState.origin->armies--;
+
+		attackRolls.erase(maxAtk);
+		defendRolls.erase(maxDf);
+	}
+
+	if (attackState.target->armies = 0) {
+		turnState = TurnPhase::VictoryArmyMove;
+		Player* victor = attackState.origin->owner;
+
+		attackState.target->owner = victor;
+
+		/*if (attackState.origin->armies - attackState.attackDie > 1) {
+			while (victor->commandError) {
+				std::unique_ptr<Command> cmd(victor->getCommand(*this));
+				cmd->Execute(*this);
+			}
+
+		} else {*/
+			attackState.target->armies += attackState.origin->armies - 1;
+			attackState.origin->armies = 1;
+		//}
+
+	}
+
+	attackState = { nullptr, nullptr, 0, 0 };
+}
 
 
 //Just try to ignore all this code because it's garbage

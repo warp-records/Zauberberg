@@ -60,7 +60,6 @@ struct FreeMove : Command {
 
 
 
-//Calls defend
 struct AttackInit : Command {
 	Player* player;
 
@@ -76,7 +75,6 @@ struct AttackInit : Command {
 	bool Execute(Game& game);
 };
 
-//Calls attack execute
 struct DefendInit : Command {
 	Player* player;
 
@@ -87,3 +85,17 @@ struct DefendInit : Command {
 
 	bool Execute(Game& game);
 };
+
+
+/*
+struct VictoryArmyMove : Command {
+	Player* player;
+
+	unsigned numArmies;
+
+	VictoryArmyMove(Player* player_, unsigned numArmies_) : 
+		player{player_}, numArmies{numArmies_} {};
+
+	bool Execute(Game& game);
+}
+*/

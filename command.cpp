@@ -80,3 +80,6 @@ bool DefendInit::Execute(Game& game) {
 
 	return true;
 }
+
+
+//bool VictoryArmyMove::Execute(Game& game) {}

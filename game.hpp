@@ -16,6 +16,7 @@ enum class TurnPhase {
 	FreeMove,
 	AttackInit,
 	DefendInit,
+	VictoryArmyMove,
 	None
 };
 
@@ -30,6 +31,8 @@ class Game {
 
 	//Used during game initialization
 	std::vector<Territory> genLandData();
+
+	void attack();
 
 public:
 	struct ATKST {

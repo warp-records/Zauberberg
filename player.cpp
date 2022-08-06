@@ -159,6 +159,11 @@ Command* User::promptDefend(Game& game) {
 	return new DefendInit(this, numDie);
 }
 
+/*
+Command* User::promptVictoryMove(Game& game) {
+	return nullptr;
+};
+*/
 
 Territory* User::terrFromStr(Game& game, std::string const& name) {
 	//Use post C++20
