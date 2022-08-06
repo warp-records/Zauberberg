@@ -6,7 +6,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 #pragma once
 
 enum class TurnPhase;
@@ -29,12 +28,8 @@ struct Player {
 
 	virtual Command* getCommand(Game& game) = 0;
 
-
 	Player(std::string const& _name, Color _color) : 
 		name{_name}, color{_color} {};
-	/*
-	Player(Color _color) : 
-		color{_color} ();*/
 };
 
 

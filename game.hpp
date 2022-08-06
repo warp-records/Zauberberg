@@ -48,13 +48,12 @@ public:
 	void doTurn();
 
 	std::vector<Territory>& getTerritories() { return territories; }
-	//Color getTurnColor() const { return static_cast<Color>(turnNum); }
 
 	TurnPhase getTurnState() { return turnState; };
 
 	int rollDie();
 };
 
-//Misc function
+
 auto searchTerrName(
 	std::vector<Territory*> const& terrs, std::string const& searchName);

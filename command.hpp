@@ -7,15 +7,11 @@ class Game;
 struct Player;
 struct User;
 
-//This design is going to be radically different 
+
 struct Command {
-	//virtual ~Command() = default;
 	virtual bool Execute(Game& game) = 0;
 };
 
-
-//Note: will need to be changed since some
-//turn phases require a move
 struct EndTurn : Command {
 	Player* player;
 
@@ -85,7 +81,6 @@ struct DefendInit : Command {
 
 	bool Execute(Game& game);
 };
-
 
 /*
 struct VictoryArmyMove : Command {

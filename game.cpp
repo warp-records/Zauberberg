@@ -21,14 +21,11 @@ auto searchTerrName(
 
 
 Game::Game(int numPlayers) {
-	//players = std::vector<Player>(numPlayers)
 	if (numPlayers < 1 || 6 < numPlayers)
 		throw std::exception();
 
 	territories = genLandData();
 
-	
-	//Initialize deck
 	std::fill(deck.begin(), deck.begin()+13, Card::Horsemen);
 	std::fill(deck.begin()+14, deck.begin()+27, Card::Cannon);
 	std::fill(deck.begin()+28, deck.begin()+41, Card::Soldier);
@@ -72,8 +69,6 @@ void Game::doTurn() {
 	
 	Player* plr = players[turnNum].get();
 
-
-
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
 	turnState = TurnPhase::PlacingArmies;
 
@@ -86,7 +81,6 @@ void Game::doTurn() {
 	plr->commandError = false;
 
 
-
 	turnState = TurnPhase::FreeMove;
 
 	do {
@@ -96,9 +90,7 @@ void Game::doTurn() {
 	} while (!plr->endTurn && plr->commandError);
 
 
-
 	//Attack mode >:D	
-	
 	do {
 		turnState = TurnPhase::AttackInit;
 
@@ -111,7 +103,6 @@ void Game::doTurn() {
 			break;
 		}
 
-
 		Player* targetPlr = attackState.target->owner;
 
 		turnState = TurnPhase::DefendInit;
@@ -120,8 +111,6 @@ void Game::doTurn() {
 			targetPlr->commandError = !cmd->Execute(*this);
 
 		} while (targetPlr->commandError);
-
-		
 
 	} while (true);
 
@@ -132,8 +121,6 @@ void Game::doTurn() {
 		turnNum++;
 	
 }
-
-
 
 /*Note: game rules force the territory a victor
 was attacking from to become unoccupied if the victor
@@ -192,10 +179,7 @@ void Game::attack() {
 }
 
 
-//Just try to ignore all this code because it's garbage
-//If you're affiliated with a corporation and you're looking
-//through this as a part of some hiring process, PLEASE IGNORE
-//IT I SWEAR I'M BETTER THAN THIS I CAN EXPLAIN
+//I KNOW IT'S GARBAGE PLS IGNORE IT I CAN EXPLAIN
 std::vector<Territory> Game::genLandData() {
 	std::vector<Territory> territories;
 
@@ -212,20 +196,13 @@ std::vector<Territory> Game::genLandData() {
 		0, 9, 13, 20, 26, 38
 	}};
 
-
-
-	//You'll have to read land_dat.hpp to understand this
 	for (auto cont : LandData::LandNames) {
-
 		for (std::string terrName : cont.second) {
 			territories.push_back(Territory(terrName, 
 				contNameMap.at(cont.first)));
 		}
-
-		//continents.push_back(Continent(cont.first, territories));
 	}
-	
-	//Unpack the neighbor data
+
 	for (int cont = LandData::data.size() - 1; cont >= 0; cont--) {
 		for (int terr = LandData::data.at(cont).size() - 1; terr >= 0; terr--) {
 			for (auto nbCord : LandData::data.at(cont).at(terr)) {
@@ -241,13 +218,6 @@ std::vector<Territory> Game::genLandData() {
 
 
 int Game::rollDie() { 
-	//Apparently this is the simplest way
-	//to use C++'s modern random library lol..
-	//std::random_device rd;
-	//std::mt19937 gen(rd);
-	//std::uniform_int_distribution<> die(1, 6);
-
-	//return die(gen);
-
+	//TODO: use C++'s modern rand library
 	return rand() % 6 + 1; 
 }

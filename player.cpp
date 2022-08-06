@@ -3,13 +3,8 @@
 #include "command.hpp"
 #include "player.hpp"
 
-
-//Command* User::promptPlaceArmies(Game& game);
-//Command* User::promptFreeMove(Game& game);
-
 Territory* terrFromStr(Game& game, std::string const& name);
 
-//Add option to end turn later
 Command* User::getCommand(Game& game) {
 
 	endTurn = false;
@@ -166,13 +161,13 @@ Command* User::promptVictoryMove(Game& game) {
 */
 
 Territory* User::terrFromStr(Game& game, std::string const& name) {
-	//Use post C++20
+	//Post C++20
 	/*
 	Territory* terr = std::ranges::find(terrs, terrName,
 		{}, &Territory::name);
 	*/
 
-	//Use pre C++20
+	//Pre C++20
     Territory* terr = &(*std::find_if(
     	game.getTerritories().begin(), 
     	game.getTerritories().end(), 
