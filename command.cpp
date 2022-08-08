@@ -69,7 +69,7 @@ bool AttackInit::Execute(Game& game) {
 
 bool DefendInit::Execute(Game& game) {
 	if (numDie == 0 || 
-		numDie > std::min(game.attackState.target->armies - 1, 2u)) {
+		numDie > std::min(game.attackState.target->armies, 2u)) {
 		return false;
 	}
 
@@ -78,4 +78,14 @@ bool DefendInit::Execute(Game& game) {
 	return true;
 }
 
-//bool VictoryArmyMove::Execute(Game& game) {}
+bool VictoryArmyMove::Execute(Game& game) {
+	if (numArmies < game.attackState.attackDie || 
+			numArmies > game.attackState.origin->armies - 1) {
+		return false;
+	}
+
+	game.attackState.target->armies -= numArmies;
+	game.attackState.origin->armies += numArmies;
+
+	return true;
+}

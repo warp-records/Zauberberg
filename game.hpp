@@ -3,7 +3,6 @@
 #include "land.hpp"
 #include "player.hpp"
 #include "card.hpp"
-//#include "command.hpp"
 #include <vector>
 #include <array>
 #include <memory>
@@ -32,7 +31,7 @@ class Game {
 	//Used during game initialization
 	std::vector<Territory> genLandData();
 
-	void attack();
+	void execAttack();
 
 public:
 	struct ATKST {

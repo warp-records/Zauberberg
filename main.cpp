@@ -16,8 +16,10 @@ int main() {
 	"Version " << VERSION << "\n" << std::endl;
 
 	Game game(2);
-	game.doTurn();
-	game.doTurn();
+
+	while (true) {
+		game.doTurn();
+	}
 
 	return 0;
 }

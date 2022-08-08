@@ -73,11 +73,11 @@ void Game::doTurn() {
 	turnState = TurnPhase::PlacingArmies;
 
 	//Are they allowed to end their turn in this?
-	while (plr->armies > 0 && !plr->endTurn) {
+	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
-	}
+	} while (plr->armies > 0 && !plr->endTurn);
 	plr->commandError = false;
 
 
@@ -112,6 +112,9 @@ void Game::doTurn() {
 
 		} while (targetPlr->commandError);
 
+		execAttack();
+
+		attackState = { nullptr, nullptr, 0, 0 };
 	} while (true);
 
 	//End of turn code
@@ -129,7 +132,7 @@ territory, and lost one army during the battle; this
 flaw was remedied in the implementation. Look into this 
 more online.*/
 
-void Game::attack() {
+void Game::execAttack() {
 	std::vector<int> attackRolls;
 	std::vector<int> defendRolls;
 
@@ -147,35 +150,55 @@ void Game::attack() {
 		auto maxDf = std::max_element(defendRolls.begin(),
 			defendRolls.end());
 
-		if (*maxAtk > *maxDf)
+		if (*maxAtk > *maxDf) 
 			attackState.target->armies--;
 		else
 			attackState.origin->armies--;
 
+
+		/*
+		//DEBUG----------------
+		if (*maxAtk > *maxDf) {
+			std::cout << attackState.target->owner->name;
+		} else {
+			std::cout << attackState.origin->owner->name;	
+		}
+		std::cout << " lost an army!" << std::endl;
+
+		//---------------------
+		*/
 		attackRolls.erase(maxAtk);
 		defendRolls.erase(maxDf);
+
 	}
 
-	if (attackState.target->armies = 0) {
+	/*
+	std::cout << "Armies on " << attackState.origin->name <<
+		": " << attackState.origin->armies << "\n";
+
+	std::cout << "Armies on " << attackState.target->name <<
+		": " << attackState.target->armies << std::endl;
+
+	*/
+	if (attackState.target->armies == 0) {
 		turnState = TurnPhase::VictoryArmyMove;
 		Player* victor = attackState.origin->owner;
 
 		attackState.target->owner = victor;
 
-		/*if (attackState.origin->armies - attackState.attackDie > 1) {
+		if (attackState.origin->armies - attackState.attackDie > 1) {
 			while (victor->commandError) {
 				std::unique_ptr<Command> cmd(victor->getCommand(*this));
 				cmd->Execute(*this);
 			}
 
-		} else {*/
+		} else {
 			attackState.target->armies += attackState.origin->armies - 1;
 			attackState.origin->armies = 1;
-		//}
+		}
 
 	}
 
-	attackState = { nullptr, nullptr, 0, 0 };
 }
 
 

@@ -82,7 +82,8 @@ struct DefendInit : Command {
 	bool Execute(Game& game);
 };
 
-/*
+
+
 struct VictoryArmyMove : Command {
 	Player* player;
 
@@ -92,5 +93,4 @@ struct VictoryArmyMove : Command {
 		player{player_}, numArmies{numArmies_} {};
 
 	bool Execute(Game& game);
-}
-*/
+};

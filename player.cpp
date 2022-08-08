@@ -31,6 +31,14 @@ Command* User::getCommand(Game& game) {
 			return promptAttack(game);
 		};
 
+		case (TurnPhase::DefendInit): {
+			return promptDefend(game);
+		}
+
+		case (TurnPhase::VictoryArmyMove): {
+			return promptVictoryMove(game);
+		}
+
 		default: {
 			std::cerr << "Error: invalid turn state; terminating." << 
 				std::endl;
@@ -154,11 +162,20 @@ Command* User::promptDefend(Game& game) {
 	return new DefendInit(this, numDie);
 }
 
-/*
+
 Command* User::promptVictoryMove(Game& game) {
-	return nullptr;
+	std::cout << "\nVICTORY! How many armies " <<
+		"do you want to move from " << game.attackState.origin->name <<
+		" to " << game.attackState.target->name << 
+		" (" << game.attackState.attackDie << " - " <<
+		game.attackState.origin->armies - 1 << ")?" << std ::endl;
+
+	unsigned numArmies;
+	std::cin >> numArmies;
+
+	return new VictoryArmyMove(this, numArmies);
 };
-*/
+
 
 Territory* User::terrFromStr(Game& game, std::string const& name) {
 	//Post C++20

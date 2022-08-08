@@ -46,7 +46,7 @@ private:
 	Command* promptFreeMove(Game& game);
 	Command* promptAttack(Game& game);
 	Command* promptDefend(Game& game);
-	//Command* promptVicotryMove(Game& game);
+	Command* promptVictoryMove(Game& game);
 
 	Territory* terrFromStr(Game& game, std::string const& name);
 
