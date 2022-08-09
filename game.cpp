@@ -66,6 +66,8 @@ Game::Game(int numPlayers) {
 
 //THIS is where the fun begins!
 void Game::doTurn() {
+
+	if (gameOver_) return;
 	
 	Player* plr = players[turnNum].get();
 
@@ -123,6 +125,15 @@ void Game::doTurn() {
 	else
 		turnNum++;
 	
+	for (auto it = players.begin(); it != players.end(); it++) {
+		if ((*it)->terrs.empty())
+			players.erase(it);
+	}
+
+	if (players.size() == 1) {
+		winnerName = players[0]->name;
+		gameOver_ = true;
+	}
 }
 
 /*Note: game rules force the territory a victor

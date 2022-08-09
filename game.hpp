@@ -33,6 +33,9 @@ class Game {
 
 	void execAttack();
 
+	bool gameOver_ = false;
+	std::string winnerName;
+
 public:
 	struct ATKST {
 		Territory* origin;
@@ -48,9 +51,12 @@ public:
 
 	std::vector<Territory>& getTerritories() { return territories; }
 
-	TurnPhase getTurnState() { return turnState; };
+	TurnPhase getTurnState() { return turnState; }
 
 	int rollDie();
+
+	bool gameOver() { return gameOver_; }
+	std::string getWinnerName() { return winnerName; }
 };
 
 

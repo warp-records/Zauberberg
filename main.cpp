@@ -1,6 +1,5 @@
 
-
-#define VERSION "0.0.4"
+#define VERSION "0.0.5"
 
 #include <iostream>
 #include "game.hpp"
@@ -17,9 +16,12 @@ int main() {
 
 	Game game(2);
 
-	while (true) {
+	while (!game.gameOver()) {
 		game.doTurn();
 	}
+
+	std::cout << game.getWinnerName() << 
+		" won the game!" <<	std::endl;
 
 	return 0;
 }
