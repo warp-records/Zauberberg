@@ -136,14 +136,16 @@ void Game::execAttack() {
 	std::vector<int> attackRolls;
 	std::vector<int> defendRolls;
 
-	for (int i = 0; i < attackState.attackDie; i++)
+	int numBattles = std::min(attackState.attackDie, attackState.defendDie);
+
+	for (int i = 0; i < numBattles; i++)
 		attackRolls.push_back(rollDie());
 	
-	for (int i = 0; i < attackState.defendDie; i++)
+	for (int i = 0; i < numBattles; i++)
 		defendRolls.push_back(rollDie());
 
 
-	for (int i = 0; i < attackState.defendDie; i++) {
+	for (int i = 0; i < numBattles; i++) {
 
 		auto maxAtk = std::max_element(attackRolls.begin(),
 				attackRolls.end());
@@ -178,19 +180,23 @@ void Game::execAttack() {
 
 	std::cout << "Armies on " << attackState.target->name <<
 		": " << attackState.target->armies << std::endl;
-
 	*/
 	if (attackState.target->armies == 0) {
 		turnState = TurnPhase::VictoryArmyMove;
 		Player* victor = attackState.origin->owner;
 
+		victor->terrs.push_back(attackState.target);
+
+		std::vector<Territory*>& loserTerrs = attackState.target->owner->terrs;
+		loserTerrs.erase(std::find(loserTerrs.begin(), loserTerrs.end(), attackState.target));
+
 		attackState.target->owner = victor;
 
 		if (attackState.origin->armies - attackState.attackDie > 1) {
-			while (victor->commandError) {
+			do {
 				std::unique_ptr<Command> cmd(victor->getCommand(*this));
 				cmd->Execute(*this);
-			}
+			} while (victor->commandError);
 
 		} else {
 			attackState.target->armies += attackState.origin->armies - 1;
