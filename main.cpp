@@ -8,6 +8,7 @@
 #include <sstream>
 
 void printTerrNeighbors();
+void outputPlayerTerritories();
 
 int main() {
 
@@ -16,6 +17,12 @@ int main() {
 
 	Game game(2);
 
+	game.getPlayers()[0]->cards.push_back(Card::Horsemen);
+	game.getPlayers()[0]->cards.push_back(Card::Horsemen);
+
+	//outputPlayerTerritories();
+
+	
 	while (!game.gameOver()) {
 		game.doTurn();
 	}

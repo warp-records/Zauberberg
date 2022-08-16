@@ -212,20 +212,22 @@ Command* User::promptPlayCards(Game& game) {
 	if (cards.size() > 0) {
 		for (Card card : cards) {
 			out += cardToStr(card) + ",\n";
-
-			//Remove last comma and newline
-			out.pop_back();
-			out.pop_back();
 		}
 	} else {
 		out = "(None)";
 	}
+
+	//Remove last comma and newline
+	out.pop_back();
+	out.pop_back();
 
 	out += "\n";
 
 	std::cout << out << std::endl;
 
 	std::string in;
+
+	std::cin >> in;
 
 	if (in == "n") {
 		return new EndTurn(this);
@@ -235,7 +237,14 @@ Command* User::promptPlayCards(Game& game) {
 		return getCommand(game);
 	}
 
+	std::cout << "Which cards would you like to play?"
+		<< std::endl;
+
 	std::array<std::string, 3> cardNames;
+
+	for (std::string& name : cardNames) {
+		std::cin >> name;
+	}
 
 	return new PlayCards(this, cardNames);
 }

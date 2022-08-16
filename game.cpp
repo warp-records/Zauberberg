@@ -71,7 +71,7 @@ void Game::doTurn() {
 	
 	Player* plr = players[turnNum].get();
 
-	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
+	plr->armies = std::max(plr->terrs.size() / 3 + plr->armies, 3ul);
 	turnState = TurnPhase::PlacingArmies;
 
 	//Placing armies
@@ -132,7 +132,7 @@ void Game::doTurn() {
 	turnState = TurnPhase::PlayCards;
 	do {
 		Command* cmd (plr->getCommand(*this));
-		plr->commandError = cmd->Execute(*this);
+		plr->commandError = !cmd->Execute(*this);
 
 	} while (plr->commandError && 
 		!plr->endTurn || 

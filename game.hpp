@@ -52,6 +52,12 @@ public:
 
 	void doTurn();
 
+	int getCardPlays() { return cardPlays; }
+	void incCardPlays() { cardPlays++; }
+
+	//Expose for debugging purposes
+	std::vector<std::unique_ptr<Player>>& getPlayers() { return players; }
+
 	std::vector<Territory>& getTerritories() { return territories; }
 
 	TurnPhase getTurnState() { return turnState; }

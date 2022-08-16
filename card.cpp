@@ -4,37 +4,22 @@
 #include <map>
 
 std::string cardToStr(Card card) {
-	std::string str;
 
-	std::map<Card, std::string> map;
+	std::map<Card, std::string> map {
+		{Card::Horsemen, "Horsemen"},
+		{Card::Cannon, "Cannon"},
+		{Card::Soldier, "Soldier"},
+		{Card::Joker, "Joker"}
+	};
 
-	switch (card) {
-		case (Card::Horsemen): {
-			str = "Horsemen";
-			break;
-		}
+	auto strItr = map.find(card);
 
-		case (Card::Cannon): {
-			str = "Cannon";
-			break;
-		}
+	if (strItr == map.end())
+		throw std::exception();
 
-		case (Card::Soldier): {
-			str = "Soldier";
-			break;
-		}
-
-		case (Card::Joker): {
-			str = "Joker";
-			break;
-		}
-
-		default:
-			throw std::exception();
-	}
-
-	return str;
+	return strItr->second;
 }
+
 
 Card strToCard(std::string const& str) {
 	
@@ -52,33 +37,4 @@ Card strToCard(std::string const& str) {
 
 	return cardItr->second;
 	
-
-	/*
-	Card card;
-
-	switch (str) {
-		case ("Horsemen"): {
-			card = Card::Horsemen;
-			break;
-		}
-
-		case ("Cannon"): {
-			card = Card::Cannon;
-			break;
-
-		}
-
-		case ("Soldier"): {
-			card = Card::Soldier;
-			break;
-		}
-
-		case ("Joker"): {
-			card = Card::Joker;
-			break;
-		}
-
-		default:
-			throw std::exception();
-	}*/
 }

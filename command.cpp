@@ -103,6 +103,8 @@ bool PlayCards::Execute(Game& game) {
 
 	std::vector<Card> cardList = player->cards;
 
+	bool validCardPlay = false;
+
 	try {
 		for (int i = 0; i < 3; i++) {
 			chosenCards[i] = strToCard(cardNames[i]);
@@ -124,30 +126,41 @@ bool PlayCards::Execute(Game& game) {
 		for (Card card : chosenCards)
 			game.discardCard<std::vector>(player->cards, card);	
 
-		return true;
+		validCardPlay = true;
 	}
 
-	if (std_ext::count_unique(chosenCards.begin(), 
-		chosenCards.end()) == 0) {
+	if (!validCardPlay && std_ext::count_unique(chosenCards.begin(), 
+		chosenCards.end()) == 1) {
 
 		for (Card card : chosenCards)
 			game.discardCard<std::vector>(player->cards, card);	
 
-		return true;
+		validCardPlay = true;
 	}
 
-	if (std::count(player->cards.begin(), 
+	if (!validCardPlay && std::count(player->cards.begin(), 
 		player->cards.end(), Card::Joker) >= 1) {
 
 		for (Card card : chosenCards)
 			game.discardCard<std::vector>(player->cards, card);	
 
-		return true;
+		validCardPlay = true;
+	}
+	
+	if (!validCardPlay)
+		return false;
+
+	if (game.getCardPlays() < 5) {
+		player->armies += 4 + game.getCardPlays() * 2;
+	} else if (game.getCardPlays() == 5) {
+		player->armies += 15;
+	} else {
+		player->armies += game.getCardPlays() * 5 - 10;
 	}
 
-	//Still need to implement
+	game.incCardPlays();
 
-	return false;
+	return true;
 };
 
 

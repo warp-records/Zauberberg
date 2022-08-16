@@ -1,0 +1,50 @@
+Game with two players:
+
+Player 1's territories:
+
+Quebec
+Western United States
+Eastern United States
+Venezuala
+Peru
+Brazil
+Argentina
+Scandanavia
+Great Britain
+Northern Europe
+Southern Europe
+Egypt
+North Africa
+Congo
+Madagasgar
+Ural
+Siberia
+Kamchatka
+Mongolia
+Japan
+Afghanistam
+
+
+Player 2's territories:
+
+Alaska
+Northwest Territory
+Greenland
+Alberta
+Ontario
+Central America
+Iceland
+Ukraine
+Western Europe
+East Africa
+South Africa
+Yaktusk
+Irkutsk
+China
+Middle East
+India
+Siam
+Indonesia
+New Guinea
+Western Australia
+Eastern Australia
