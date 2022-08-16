@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include "command.hpp"
 #include "player.hpp"
+#include "card.hpp"
 
 Territory* terrFromStr(Game& game, std::string const& name);
 
@@ -37,6 +38,10 @@ Command* User::getCommand(Game& game) {
 
 		case (TurnPhase::VictoryArmyMove): {
 			return promptVictoryMove(game);
+		}
+
+		case (TurnPhase::PlayCards): {
+			return promptPlayCards(game);
 		}
 
 		default: {
@@ -80,7 +85,7 @@ Command* User::promptFreeMove(Game& game) {
 	} else if (choice != 'y') {
 		commandError = true;
 
-		return promptFreeMove(game);
+		return getCommand(game);
 	}
 
 	std::cout << "\nWhat territory would you like to " <<
@@ -194,4 +199,43 @@ Territory* User::terrFromStr(Game& game, std::string const& name) {
         }));
 
     return terr;
+}
+
+Command* User::promptPlayCards(Game& game) {
+	
+	std::cout << "Would you like to play any cards?" <<
+		" You must play cards if you have 5 cards. (y/n)" <<
+		"\nYour cards:\n";
+
+	std::string out;
+
+	if (cards.size() > 0) {
+		for (Card card : cards) {
+			out += cardToStr(card) + ",\n";
+
+			//Remove last comma and newline
+			out.pop_back();
+			out.pop_back();
+		}
+	} else {
+		out = "(None)";
+	}
+
+	out += "\n";
+
+	std::cout << out << std::endl;
+
+	std::string in;
+
+	if (in == "n") {
+		return new EndTurn(this);
+	} else if (in != "y") {
+		commandError = true;
+
+		return getCommand(game);
+	}
+
+	std::array<std::string, 3> cardNames;
+
+	return new PlayCards(this, cardNames);
 }

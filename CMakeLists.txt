@@ -7,4 +7,6 @@ add_executable(Zauberberg
 			player.cpp
 			command.cpp
 			land.cpp
-			game.cpp)
+			game.cpp
+			card.cpp
+			)

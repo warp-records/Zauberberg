@@ -16,6 +16,7 @@ enum class TurnPhase {
 	AttackInit,
 	DefendInit,
 	VictoryArmyMove,
+	PlayCards,
 	None
 };
 
@@ -27,6 +28,8 @@ class Game {
 
 	TurnPhase turnState = TurnPhase::None;
 	int turnNum = 0;
+
+	int cardPlays = 0;
 
 	//Used during game initialization
 	std::vector<Territory> genLandData();
@@ -53,12 +56,27 @@ public:
 
 	TurnPhase getTurnState() { return turnState; }
 
-	int rollDie();
+	static int rollDie();
 
 	bool gameOver() { return gameOver_; }
 	std::string getWinnerName() { return winnerName; }
+
+	template <template<class ...> class Cont> void 
+		discardCard(Cont<Card>& cards, Card card);
 };
 
+
+template <template<typename ...> typename Cont> void 
+	Game::discardCard(Cont<Card>& cards, Card card) {
+
+	typename Cont<Card>::iterator it = cards.begin();
+
+	it = std::find(cards.begin(), cards.end(), card);
+
+	deck.push_back(*it);
+
+	cards.erase(it);
+}
 
 auto searchTerrName(
 	std::vector<Territory*> const& terrs, std::string const& searchName);

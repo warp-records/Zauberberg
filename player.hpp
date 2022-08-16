@@ -23,6 +23,8 @@ struct Player {
 	bool commandError = false;
 	int armies = 0;
 
+	bool terrCaptured;
+
 	//For defend command only
 	int numDiceUsing;
 
@@ -47,6 +49,7 @@ private:
 	Command* promptAttack(Game& game);
 	Command* promptDefend(Game& game);
 	Command* promptVictoryMove(Game& game);
+	Command* promptPlayCards(Game& game);
 
 	Territory* terrFromStr(Game& game, std::string const& name);
 

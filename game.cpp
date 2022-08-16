@@ -74,7 +74,7 @@ void Game::doTurn() {
 	plr->armies = std::max(plr->terrs.size() / 3, 3ul);
 	turnState = TurnPhase::PlacingArmies;
 
-	//Are they allowed to end their turn in this?
+	//Placing armies
 	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
@@ -83,6 +83,7 @@ void Game::doTurn() {
 	plr->commandError = false;
 
 
+	//Free move
 	turnState = TurnPhase::FreeMove;
 
 	do {
@@ -92,7 +93,9 @@ void Game::doTurn() {
 	} while (!plr->endTurn && plr->commandError);
 
 
-	//Attack mode >:D	
+	//Attacking
+	attackState = { nullptr, nullptr, 0, 0 };
+
 	do {
 		turnState = TurnPhase::AttackInit;
 
@@ -116,10 +119,28 @@ void Game::doTurn() {
 
 		execAttack();
 
-		attackState = { nullptr, nullptr, 0, 0 };
 	} while (true);
 
+	if (plr->terrCaptured) {
+		if (!deck.empty()) {
+			plr->cards.push_back(deck.front());
+			deck.erase(deck.begin());
+		}
+	}
+
+	//Play cards
+	turnState = TurnPhase::PlayCards;
+	do {
+		Command* cmd (plr->getCommand(*this));
+		plr->commandError = cmd->Execute(*this);
+
+	} while (plr->commandError && 
+		!plr->endTurn || 
+		plr->cards.size() == 5);
+
 	//End of turn code
+	plr->terrCaptured = false;
+
 	if (turnNum == players.size() - 1)
 		turnNum = 0;
 	else
@@ -196,6 +217,7 @@ void Game::execAttack() {
 		turnState = TurnPhase::VictoryArmyMove;
 		Player* victor = attackState.origin->owner;
 
+		victor->terrCaptured = true;
 		victor->terrs.push_back(attackState.target);
 
 		std::vector<Territory*>& loserTerrs = attackState.target->owner->terrs;
@@ -261,3 +283,5 @@ int Game::rollDie() {
 	//TODO: use C++'s modern rand library
 	return rand() % 6 + 1; 
 }
+
+

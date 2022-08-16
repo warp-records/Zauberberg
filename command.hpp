@@ -1,5 +1,6 @@
 
 #include "land.hpp"
+#include <array>
 
 #pragma once
 
@@ -91,6 +92,16 @@ struct VictoryArmyMove : Command {
 
 	VictoryArmyMove(Player* player_, unsigned numArmies_) : 
 		player{player_}, numArmies{numArmies_} {};
+
+	bool Execute(Game& game);
+};
+
+struct PlayCards : Command {
+	Player* player;
+	std::array<std::string, 3> cardNames;
+
+	PlayCards(Player* player_, std::array<std::string, 3> cardNames_) : 
+		player{player_}, cardNames{cardNames_} {};
 
 	bool Execute(Game& game);
 };
