@@ -127,7 +127,7 @@ Command* User::promptAttack(Game& game) {
 	} else if (choice != 'y') {
 		commandError = true;
 
-		return promptAttack(game);
+		return getCommand(game);
 	}
 
 	std::cout << "\nWhat territory would you like to " <<

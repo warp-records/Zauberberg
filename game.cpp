@@ -130,13 +130,17 @@ void Game::doTurn() {
 
 	//Play cards
 	turnState = TurnPhase::PlayCards;
-	do {
+
+	plr->endTurn = false;
+
+	while (plr->cards.size() >= 3 && !plr->endTurn ||
+		plr->commandError ||
+		plr->cards.size() == 5) {
+
 		Command* cmd (plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
 
-	} while (plr->commandError && 
-		!plr->endTurn || 
-		plr->cards.size() == 5);
+	};
 
 	//End of turn code
 	plr->terrCaptured = false;
@@ -190,8 +194,8 @@ void Game::execAttack() {
 			attackState.origin->armies--;
 
 
-		/*
-		//DEBUG----------------
+		
+		/*//DEBUG----------------
 		if (*maxAtk > *maxDf) {
 			std::cout << attackState.target->owner->name;
 		} else {
@@ -199,20 +203,23 @@ void Game::execAttack() {
 		}
 		std::cout << " lost an army!" << std::endl;
 
-		//---------------------
-		*/
+		*///---------------------
+		
 		attackRolls.erase(maxAtk);
 		defendRolls.erase(maxDf);
 
 	}
 
-	/*
+	
+	/*//-------------------
 	std::cout << "Armies on " << attackState.origin->name <<
 		": " << attackState.origin->armies << "\n";
 
 	std::cout << "Armies on " << attackState.target->name <<
 		": " << attackState.target->armies << std::endl;
-	*/
+	*///--------------------
+	
+
 	if (attackState.target->armies == 0) {
 		turnState = TurnPhase::VictoryArmyMove;
 		Player* victor = attackState.origin->owner;

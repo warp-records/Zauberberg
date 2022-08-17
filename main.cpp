@@ -17,10 +17,10 @@ int main() {
 
 	Game game(2);
 
-	game.getPlayers()[0]->cards.push_back(Card::Horsemen);
-	game.getPlayers()[0]->cards.push_back(Card::Horsemen);
-
-	//outputPlayerTerritories();
+	/*
+	for (int i = 0; i <= 3; i++)
+		game.getPlayers()[0]->cards.push_back(Card::Horsemen);
+	*/
 
 	
 	while (!game.gameOver()) {
