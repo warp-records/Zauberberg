@@ -1,5 +1,5 @@
 
-#define VERSION "0.0.5"
+#define VERSION "0.1.0"
 
 #include <iostream>
 #include "game.hpp"
@@ -16,11 +16,6 @@ int main() {
 	"Version " << VERSION << "\n" << std::endl;
 
 	Game game(2);
-
-	/*
-	for (int i = 0; i <= 3; i++)
-		game.getPlayers()[0]->cards.push_back(Card::Horsemen);
-	*/
 
 	
 	while (!game.gameOver()) {
