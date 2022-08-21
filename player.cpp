@@ -45,9 +45,7 @@ Command* User::getCommand(Game& game) {
 		}
 
 		default: {
-			std::cerr << "Error: invalid turn state; terminating." << 
-				std::endl;
-			return nullptr;
+			throw std::exception("Invalid turn state; terminating.");
 		}
 	}
 }
@@ -68,7 +66,7 @@ Command* User::promptPlaceArmies(Game& game) {
 
 	Territory* terr = terrFromStr(game, terrName);
 
-	return new PlaceArmy(this, terr, numArmies);
+	return new PlaceArmy(*this, terr, numArmies);
 }
 
 
@@ -80,7 +78,7 @@ Command* User::promptFreeMove(Game& game) {
 	std::cin >> choice;
 
 	if (choice == 'n') {
-		return new EndTurn(this);
+		return new EndTurn(*this);
 
 	} else if (choice != 'y') {
 		commandError = true;
@@ -111,7 +109,7 @@ Command* User::promptFreeMove(Game& game) {
 	Territory* destPtr = terrFromStr(game, dest);
 
 
-	return new FreeMove(this, originPtr, destPtr, numArmies);
+	return new FreeMove(*this, *originPtr, *destPtr, numArmies);
 }
 
 Command* User::promptAttack(Game& game) {
@@ -122,7 +120,7 @@ Command* User::promptAttack(Game& game) {
 	std::cin >> choice;
 
 	if (choice == 'n') {
-		return new EndTurn(this);
+		return new EndTurn(*this);
 
 	} else if (choice != 'y') {
 		commandError = true;
@@ -152,7 +150,7 @@ Command* User::promptAttack(Game& game) {
 	Territory* originPtr = terrFromStr(game, origin);
 	Territory* targetPtr = terrFromStr(game, target);
 
-	return new AttackInit(this, originPtr, targetPtr, numDie);
+	return new AttackInit(*this, *originPtr, targetPtr, numDie);
 }
 
 
@@ -164,7 +162,7 @@ Command* User::promptDefend(Game& game) {
 	unsigned numDie;
 	std::cin >> numDie;
 
-	return new DefendInit(this, numDie);
+	return new DefendInit(*this, numDie);
 }
 
 
@@ -178,7 +176,7 @@ Command* User::promptVictoryMove(Game& game) {
 	unsigned numArmies;
 	std::cin >> numArmies;
 
-	return new VictoryArmyMove(this, numArmies);
+	return new VictoryArmyMove(*this, numArmies);
 };
 
 
@@ -197,6 +195,9 @@ Territory* User::terrFromStr(Game& game, std::string const& name) {
         [&name](Territory& currentTerr) {
         	return currentTerr.name == name; 
         }));
+
+    if (terr == &(*game.getTerritories().end()))
+    	throw std::exception("Territory not found");
 
     return terr;
 }
@@ -230,7 +231,7 @@ Command* User::promptPlayCards(Game& game) {
 	std::cin >> in;
 
 	if (in == "n") {
-		return new EndTurn(this);
+		return new EndTurn(*this);
 	} else if (in != "y") {
 		commandError = true;
 
@@ -246,5 +247,5 @@ Command* User::promptPlayCards(Game& game) {
 		std::cin >> name;
 	}
 
-	return new PlayCards(this, cardNames);
+	return new PlayCards(*this, cardNames);
 }

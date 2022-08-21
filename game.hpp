@@ -62,7 +62,7 @@ public:
 
 	TurnPhase getTurnState() { return turnState; }
 
-	static int rollDie();
+	int rollDie();
 
 	bool gameOver() { return gameOver_; }
 	std::string getWinnerName() { return winnerName; }

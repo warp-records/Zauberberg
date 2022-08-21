@@ -14,59 +14,59 @@ class Game;
 //void Game::discardCard<std::vector>(std::vector<Card>& cards, Card card);
 
 bool PlaceArmy::Execute(Game& game) {
-	if (terr->owner != player)
+	if (terr.owner != player)
 		return false;
 
-	if (numArmies > player->armies)
+	if (numArmies > player.armies)
 		return false;
 
-	terr->armies += numArmies;
-	player->armies -= numArmies;
+	terr.armies += numArmies;
+	player.armies -= numArmies;
 
 	return true;
 }
 
 bool FreeMove::Execute(Game& game) {
-	if (origin->owner != player)
+	if (origin.owner != player)
 		return false;
 	
-	if (dest->owner != player)
+	if (dest.owner != player)
 		return false;
 
-	if (origin->armies - numArmies < 1)
+	if (origin.armies - numArmies < 1)
 		return false;
 
 	if (dest == origin)
 		return false;
 
-	origin->armies -= numArmies;
-	dest->armies += numArmies;
+	origin.armies -= numArmies;
+	dest.armies += numArmies;
 
 	return true;
 }
 
 bool AttackInit::Execute(Game& game) {
-	if (origin->armies == 1)
+	if (origin.armies == 1)
 		return false;
 
 	if (numDie == 0 || 
-		numDie > std::min(origin->armies - 1, 3u)) {
+		numDie > std::min(origin.armies - 1, 3u)) {
 		return false;
 	}
 
-	if (origin->owner != player)
+	if (origin.owner != player)
 		return false;
 
-	if (std::find(origin->neighbors.begin(), 
-		origin->neighbors.end(), target) == origin->neighbors.end()) {
+	if (std::find(origin.neighbors.begin(), 
+		origin.neighbors.end(), target) == origin.neighbors.end()) {
 		return false;
 	}
 
-	if (target->owner == player)
+	if (target.owner == player)
 		return false;
 
 	game.attackState = {
-		origin, target, numDie, 0
+		&origin, &target, numDie, 0
 	};
 
 	return true;
@@ -101,7 +101,7 @@ bool PlayCards::Execute(Game& game) {
 
 	std::array<Card, 3> chosenCards;
 
-	std::vector<Card> cardList = player->cards;
+	std::vector<Card> cardList = player.cards;
 
 	bool validCardPlay = false;
 
@@ -124,7 +124,7 @@ bool PlayCards::Execute(Game& game) {
 	if (std_ext::count_unique(chosenCards.begin(), 
 			chosenCards.end()) == 3) {
 		for (Card card : chosenCards)
-			game.discardCard<std::vector>(player->cards, card);	
+			game.discardCard<std::vector>(player.cards, card);	
 
 		validCardPlay = true;
 	}
@@ -133,16 +133,16 @@ bool PlayCards::Execute(Game& game) {
 		chosenCards.end()) == 1) {
 
 		for (Card card : chosenCards)
-			game.discardCard<std::vector>(player->cards, card);	
+			game.discardCard<std::vector>(player.cards, card);	
 
 		validCardPlay = true;
 	}
 
-	if (!validCardPlay && std::count(player->cards.begin(), 
-		player->cards.end(), Card::Joker) >= 1) {
+	if (!validCardPlay && std::count(player.cards.begin(), 
+		player.cards.end(), Card::Joker) >= 1) {
 
 		for (Card card : chosenCards)
-			game.discardCard<std::vector>(player->cards, card);	
+			game.discardCard<std::vector>(player.cards, card);	
 
 		validCardPlay = true;
 	}
@@ -151,11 +151,11 @@ bool PlayCards::Execute(Game& game) {
 		return false;
 
 	if (game.getCardPlays() < 5) {
-		player->armies += 4 + game.getCardPlays() * 2;
+		player.armies += 4 + game.getCardPlays() * 2;
 	} else if (game.getCardPlays() == 5) {
-		player->armies += 15;
+		player.armies += 15;
 	} else {
-		player->armies += game.getCardPlays() * 5 - 10;
+		player.armies += game.getCardPlays() * 5 - 10;
 	}
 
 	game.incCardPlays();

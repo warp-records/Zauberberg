@@ -21,8 +21,8 @@ struct EndTurn : Command {
 		return true;
 	};
 
-	EndTurn(Player* player_) : 
-		player{player_} {};
+	EndTurn(Player& player_) : 
+		player{&player_} {};
 };
 
 
@@ -32,9 +32,9 @@ struct PlaceArmy : Command {
 	Territory* terr;
 	unsigned numArmies;
 
-	PlaceArmy(Player* player_, 
-		Territory* terr_, unsigned numArmies_) :
-	player{player_}, terr{terr_}, numArmies{numArmies_} {};
+	PlaceArmy(Player& player_, 
+		Territory& terr_, unsigned numArmies_) :
+	player{&player_}, terr{&terr_}, numArmies{numArmies_} {};
 
 	bool Execute(Game& game);
 };
@@ -47,9 +47,9 @@ struct FreeMove : Command {
 	unsigned numArmies;
 
 
-	FreeMove(Player* player_, Territory* origin_, 
-		Territory* dest_, unsigned numArmies_) :
-		player{player_}, origin{origin_}, dest{dest_},
+	FreeMove(Player& player_, Territory& origin_, 
+		Territory& dest_, unsigned numArmies_) :
+		player{&player_}, origin{&origin_}, dest{&dest_},
 		numArmies{numArmies_} {};
 
 	bool Execute(Game& game);
@@ -64,9 +64,9 @@ struct AttackInit : Command {
 	Territory* target;
 	unsigned numDie;
 
-	AttackInit(Player* player_, Territory* origin_, 
-		Territory* target_, unsigned numDie_) :
-		player{player_}, origin{origin_}, target{target_},
+	AttackInit(Player& player_, Territory& origin_, 
+		Territory& target_, unsigned numDie_) :
+		player{&player_}, origin{&origin_}, target{&target_},
 		numDie{numDie_} {};
 
 	bool Execute(Game& game);
@@ -77,8 +77,8 @@ struct DefendInit : Command {
 
 	unsigned numDie;
 
-	DefendInit(Player* player_, unsigned numDie_) :
-		player{player_}, numDie{numDie_} {};
+	DefendInit(Player& player_, unsigned numDie_) :
+		player{&player_}, numDie{numDie_} {};
 
 	bool Execute(Game& game);
 };
@@ -90,8 +90,8 @@ struct VictoryArmyMove : Command {
 
 	unsigned numArmies;
 
-	VictoryArmyMove(Player* player_, unsigned numArmies_) : 
-		player{player_}, numArmies{numArmies_} {};
+	VictoryArmyMove(Player& player_, unsigned numArmies_) : 
+		player{&player_}, numArmies{numArmies_} {};
 
 	bool Execute(Game& game);
 };
@@ -100,8 +100,8 @@ struct PlayCards : Command {
 	Player* player;
 	std::array<std::string, 3> cardNames;
 
-	PlayCards(Player* player_, std::array<std::string, 3> cardNames_) : 
-		player{player_}, cardNames{cardNames_} {};
+	PlayCards(Player& player_, std::array<std::string, 3> cardNames_) : 
+		player{&player_}, cardNames{cardNames_} {};
 
 	bool Execute(Game& game);
 };

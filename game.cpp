@@ -22,7 +22,7 @@ auto searchTerrName(
 
 Game::Game(int numPlayers) {
 	if (numPlayers < 1 || 6 < numPlayers)
-		throw std::exception();
+		throw std::exception("Invalid number of players");
 
 	territories = genLandData();
 
