@@ -78,9 +78,9 @@ void Game::doTurn() {
 	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
-		plr->commandError = !cmd->Execute(*this);
+		plr->commandStatus = cmd->Execute(*this);
 	} while (plr->armies > 0 && !plr->endTurn);
-	plr->commandError = false;
+	plr->commandStatus = CmdStatus::Success;
 
 
 	//Free move
@@ -89,8 +89,8 @@ void Game::doTurn() {
 	do {
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
-		plr->commandError = !cmd->Execute(*this);
-	} while (!plr->endTurn && plr->commandError);
+		plr->commandStatus = cmd->Execute(*this);
+	} while (!plr->endTurn && plr->commandError());
 
 
 	//Attacking
@@ -100,9 +100,9 @@ void Game::doTurn() {
 		turnState = TurnPhase::AttackInit;
 
 		std::unique_ptr<Command> cmd(plr->getCommand(*this));
-		plr->commandError = !cmd->Execute(*this);
+		plr->commandStatus = cmd->Execute(*this);
 
-		if (plr->commandError) {
+		if (plr->commandError()) {
 			continue;
 		} else if (plr->endTurn) {
 			break;
@@ -113,9 +113,9 @@ void Game::doTurn() {
 		turnState = TurnPhase::DefendInit;
 		do {
 			std::unique_ptr<Command> cmd(targetPlr->getCommand(*this));
-			targetPlr->commandError = !cmd->Execute(*this);
+			targetPlr->commandStatus = cmd->Execute(*this);
 
-		} while (targetPlr->commandError);
+		} while (targetPlr->commandError());
 
 		execAttack();
 
@@ -134,11 +134,11 @@ void Game::doTurn() {
 	plr->endTurn = false;
 
 	while (plr->cards.size() >= 3 && !plr->endTurn ||
-		plr->commandError ||
+		plr->commandError() ||
 		plr->cards.size() == 5) {
 
 		std::unique_ptr<Command> cmd (plr->getCommand(*this));
-		plr->commandError = !cmd->Execute(*this);
+		plr->commandStatus = cmd->Execute(*this);
 
 	};
 
@@ -236,7 +236,7 @@ void Game::execAttack() {
 			do {
 				std::unique_ptr<Command> cmd(victor->getCommand(*this));
 				cmd->Execute(*this);
-			} while (victor->commandError);
+			} while (victor->commandError());
 
 		} else {
 			attackState.target->armies += attackState.origin->armies - 1;
@@ -248,7 +248,7 @@ void Game::execAttack() {
 }
 
 
-//I KNOW IT'S GARBAGE PLS IGNORE IT I CAN EXPLAIN
+//I KNOW IT'S GARBAGE PLS IGNORE IT I CAN EXPLAIN -
 std::vector<Territory> Game::genLandData() {
 	std::vector<Territory> territories;
 

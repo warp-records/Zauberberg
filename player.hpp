@@ -2,6 +2,7 @@
 #include "land.hpp"
 #include "color.hpp"
 #include "card.hpp"
+#include "command.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -12,6 +13,7 @@
 enum class TurnPhase;
 struct Command;
 class Game;
+enum class CmdStatus;
 
 struct Player {
 	std::string const name;
@@ -21,7 +23,7 @@ struct Player {
 	std::vector<Card> cards;
 
 	bool endTurn = false;
-	bool commandError = false;
+	CmdStatus commandStatus = CmdStatus::Success;
 	int armies = 0;
 
 	bool terrCaptured;
@@ -30,6 +32,8 @@ struct Player {
 	int numDiceUsing;
 
 	virtual std::unique_ptr<Command> getCommand(Game& game) = 0;
+
+	bool commandError() { return commandStatus!= CmdStatus::Success; }
 
 	Player(std::string const& name_, Color color_) : 
 		name{name_}, color{color_} {};

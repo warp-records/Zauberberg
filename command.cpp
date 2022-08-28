@@ -10,94 +10,101 @@
 #include <random>
 
 class Game;
+enum class CmdStatus;
 
 //void Game::discardCard<std::vector>(std::vector<Card>& cards, Card card);
 
-bool PlaceArmy::Execute(Game& game) {
+CmdStatus EndTurn::Execute(Game& game) { 
+	player->endTurn = true;
+
+	return CmdStatus::Success;
+};
+
+CmdStatus PlaceArmy::Execute(Game& game) {
 	if (terr->owner != player)
-		return false;
+		return CmdStatus::PlayerNotOwner;
 
 	if (numArmies > player->armies)
-		return false;
+		return CmdStatus::NotEnoughArmies;
 
 	terr->armies += numArmies;
 	player->armies -= numArmies;
 
-	return true;
+	return CmdStatus::Success;
 }
 
-bool FreeMove::Execute(Game& game) {
+CmdStatus FreeMove::Execute(Game& game) {
 	if (origin->owner != player)
-		return false;
+		return CmdStatus::PlayerNotOwner;
 	
 	if (dest->owner != player)
-		return false;
+		return CmdStatus::PlayerNotOwner;
 
 	if (origin->armies - numArmies < 1)
-		return false;
+		return CmdStatus::NotEnoughArmies;
 
 	if (dest == origin)
-		return false;
+		return CmdStatus::DestIsOrigin;
 
 	origin->armies -= numArmies;
 	dest->armies += numArmies;
 
-	return true;
+	return CmdStatus::Success;
 }
 
-bool AttackInit::Execute(Game& game) {
+CmdStatus AttackInit::Execute(Game& game) {
 	if (origin->armies == 1)
-		return false;
+		return CmdStatus::NotEnoughArmies;
 
 	if (numDie == 0 || 
 		numDie > std::min(origin->armies - 1, 3u)) {
-		return false;
+		return CmdStatus::InvalidNumDie;
 	}
 
 	if (origin->owner != player)
-		return false;
+		return CmdStatus::PlayerNotOwner;
 
 	if (std::find(origin->neighbors.begin(), 
 		origin->neighbors.end(), target) == origin->neighbors.end()) {
-		return false;
+		return CmdStatus::TargetOutsideRange;
 	}
 
 	if (target->owner == player)
-		return false;
+		return CmdStatus::SelfHarm;
 
 	game.attackState = Game::ATKST{
 		origin, target, numDie, 0
 	};
 
-	return true;
+	return CmdStatus::Success;
 }
 
-bool DefendInit::Execute(Game& game) {
+CmdStatus DefendInit::Execute(Game& game) {
 	if (numDie == 0 || 
 		numDie > std::min(game.attackState.target->armies, 2u)) {
-		return false;
+		return CmdStatus::InvalidNumDie;
 	}
 
 	game.attackState.defendDie = numDie;
 
-	return true;
+	return CmdStatus::Success;
 }
 
-bool VictoryArmyMove::Execute(Game& game) {
+CmdStatus VictoryArmyMove::Execute(Game& game) {
 	if (numArmies < game.attackState.attackDie || 
 			numArmies > game.attackState.origin->armies - 1) {
-		return false;
+		return CmdStatus::InvalidNumArmies;
 	}
 
 	game.attackState.target->armies -= numArmies;
 	game.attackState.origin->armies += numArmies;
 
-	return true;
+	return CmdStatus::Success;
 }
 
 
 
-bool PlayCards::Execute(Game& game) {
+CmdStatus PlayCards::Execute(Game& game) {
 
 	std::array<Card, 3> chosenCards;
 
@@ -113,12 +120,12 @@ bool PlayCards::Execute(Game& game) {
 				cardList.end(), chosenCards[i]);
 
 			if (it == cardList.end())
-				return false;
+				return CmdStatus::InvalidCardPlay;
 
 			cardList.erase(it);
 		}
 	} catch (...) {
-		return false;
+		return CmdStatus::InvalidCardPlay;
 	}
 
 	if (std_ext::count_unique(chosenCards.begin(), 
@@ -148,7 +155,7 @@ bool PlayCards::Execute(Game& game) {
 	}
 	
 	if (!validCardPlay)
-		return false;
+		return CmdStatus::InvalidCardPlay;
 
 	if (game.getCardPlays() < 5) {
 		player->armies += 4 + game.getCardPlays() * 2;
@@ -160,7 +167,7 @@ bool PlayCards::Execute(Game& game) {
 
 	game.incCardPlays();
 
-	return true;
+	return CmdStatus::Success;
 };
 
 

@@ -13,27 +13,25 @@ enum class CmdStatus {
 	InvalidNumArmies,
 	NotEnoughArmies,
 	SelfHarm,
-	PlayerNotOwner, 
+	PlayerNotOwner,
+	DestIsOrigin,
 	TargetOutsideRange,
 	InvalidNumDie,
-	InvalidCardPlay
+	InvalidCardPlay,
+	IOError
 };
 
 struct Command {
 	Player* player;
 
-	virtual bool Execute(Game& game) = 0;
+	virtual CmdStatus Execute(Game& game) = 0;
 
 	Command(Player& player_) : player{&player_} {};
 };
 
 struct EndTurn : Command {
 
-	bool Execute(Game& game) { 
-		player->endTurn = true;
-		return true;
-	};
-
+	CmdStatus Execute(Game& game);
 	EndTurn(Player& player_) : 
 		Command{player_} {};
 };
@@ -48,7 +46,7 @@ struct PlaceArmy : Command {
 		Territory& terr_, unsigned numArmies_) :
 	Command{player_}, terr{&terr_}, numArmies{numArmies_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };
 
 struct FreeMove : Command {
@@ -62,7 +60,7 @@ struct FreeMove : Command {
 		Command{player_}, origin{&origin_}, dest{&dest_},
 		numArmies{numArmies_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };
 
 
@@ -78,7 +76,7 @@ struct AttackInit : Command {
 		Command{player_}, origin{&origin_}, target{&target_},
 		numDie{numDie_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };
 
 struct DefendInit : Command {
@@ -88,7 +86,7 @@ struct DefendInit : Command {
 	DefendInit(Player& player_, unsigned numDie_) :
 		Command{player_}, numDie{numDie_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };
 
 
@@ -100,7 +98,7 @@ struct VictoryArmyMove : Command {
 	VictoryArmyMove(Player& player_, unsigned numArmies_) : 
 		Command{player_}, numArmies{numArmies_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };
 
 struct PlayCards : Command {
@@ -110,5 +108,5 @@ struct PlayCards : Command {
 	PlayCards(Player& player_, std::array<std::string, 3> cardNames_) : 
 		Command{player_}, cardNames{cardNames_} {};
 
-	bool Execute(Game& game);
+	CmdStatus Execute(Game& game);
 };

@@ -12,10 +12,10 @@ std::unique_ptr<Command> User::getCommand(Game& game) {
 
 	std::cout << "\n";
 
-	if (commandError) {
+	if (commandStatus != CmdStatus::Success) {
 		std::cout << "The previous command yielded" << 
 			" an error; try again." << std::endl;
-		commandError = false;
+		commandStatus = CmdStatus::Success;
 	}
 
 	switch (game.getTurnState()) {
@@ -81,7 +81,7 @@ std::unique_ptr<Command> User::promptFreeMove(Game& game) {
 		return std::unique_ptr<Command>(new EndTurn(*this));
 
 	} else if (choice != 'y') {
-		commandError = true;
+		commandStatus = CmdStatus::IOError;
 
 		return getCommand(game);
 	}
@@ -123,7 +123,7 @@ std::unique_ptr<Command> User::promptAttack(Game& game) {
 		return std::unique_ptr<Command>(new EndTurn(*this));
 
 	} else if (choice != 'y') {
-		commandError = true;
+		commandStatus = CmdStatus::IOError;
 
 		return getCommand(game);
 	}
@@ -233,7 +233,7 @@ std::unique_ptr<Command> User::promptPlayCards(Game& game) {
 	if (in == "n") {
 		return std::unique_ptr<Command>(new EndTurn(*this));
 	} else if (in != "y") {
-		commandError = true;
+		commandStatus = CmdStatus::IOError;
 
 		return getCommand(game);
 	}
