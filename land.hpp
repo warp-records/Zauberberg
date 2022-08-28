@@ -26,8 +26,8 @@ struct Territory {
 
 	std::vector<Territory*> neighbors;
 
-	Territory(std::string _name, Continent _cont) :
-	name{_name}, continent{_cont} {};
+	Territory(std::string name_, Continent cont_) :
+	name{name_}, continent{cont_} {};
 
 };
 

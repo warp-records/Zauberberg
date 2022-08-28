@@ -6,7 +6,7 @@
 
 Territory* terrFromStr(Game& game, std::string const& name);
 
-Command* User::getCommand(Game& game) {
+std::unique_ptr<Command> User::getCommand(Game& game) {
 
 	endTurn = false;
 
@@ -22,15 +22,15 @@ Command* User::getCommand(Game& game) {
 
 		case (TurnPhase::PlacingArmies): {
 			return promptPlaceArmies(game);
-		};
+		}
 
 		case (TurnPhase::FreeMove): {
 			return promptFreeMove(game);
-		};
+		}
 
 		case (TurnPhase::AttackInit): {
 			return promptAttack(game);
-		};
+		}
 
 		case (TurnPhase::DefendInit): {
 			return promptDefend(game);
@@ -45,32 +45,32 @@ Command* User::getCommand(Game& game) {
 		}
 
 		default: {
-			throw std::exception("Invalid turn state; terminating.");
+			throw std::exception();
 		}
 	}
 }
 
 
-Command* User::promptPlaceArmies(Game& game) {
+std::unique_ptr<Command> User::promptPlaceArmies(Game& game) {
 	std::cout << name << "'s turn:\n" <<
 	"Where would you like to place your armies?" << std::endl;
 
 	std::string terrName;
 	std::cin >> terrName;
 
-	std::cout << "How many armies would you like to palce?" 
+	std::cout << "How many armies would you like to place?" 
 		"\t(" << armies << " armies left)" << std::endl;
 
 	unsigned numArmies;
 	std::cin >> numArmies;
 
-	Territory* terr = terrFromStr(game, terrName);
+	Territory& terr = *terrFromStr(game, terrName);
 
-	return new PlaceArmy(*this, terr, numArmies);
+	return std::unique_ptr<Command>(new PlaceArmy(*this, terr, numArmies));
 }
 
 
-Command* User::promptFreeMove(Game& game) {
+std::unique_ptr<Command> User::promptFreeMove(Game& game) {
 	std::cout << "\nWould you like to use a free move? (y/n)" <<
 		std::endl;
 
@@ -78,7 +78,7 @@ Command* User::promptFreeMove(Game& game) {
 	std::cin >> choice;
 
 	if (choice == 'n') {
-		return new EndTurn(*this);
+		return std::unique_ptr<Command>(new EndTurn(*this));
 
 	} else if (choice != 'y') {
 		commandError = true;
@@ -109,10 +109,10 @@ Command* User::promptFreeMove(Game& game) {
 	Territory* destPtr = terrFromStr(game, dest);
 
 
-	return new FreeMove(*this, *originPtr, *destPtr, numArmies);
+	return std::unique_ptr<Command>(new FreeMove(*this, *originPtr, *destPtr, numArmies));
 }
 
-Command* User::promptAttack(Game& game) {
+std::unique_ptr<Command> User::promptAttack(Game& game) {
 	std::cout << "Would you like attack? (y/n)" <<
 		std::endl;
 
@@ -120,7 +120,7 @@ Command* User::promptAttack(Game& game) {
 	std::cin >> choice;
 
 	if (choice == 'n') {
-		return new EndTurn(*this);
+		return std::unique_ptr<Command>(new EndTurn(*this));
 
 	} else if (choice != 'y') {
 		commandError = true;
@@ -150,11 +150,11 @@ Command* User::promptAttack(Game& game) {
 	Territory* originPtr = terrFromStr(game, origin);
 	Territory* targetPtr = terrFromStr(game, target);
 
-	return new AttackInit(*this, *originPtr, targetPtr, numDie);
+	return std::unique_ptr<Command>(new AttackInit(*this, *originPtr, *targetPtr, numDie));
 }
 
 
-Command* User::promptDefend(Game& game) {
+std::unique_ptr<Command> User::promptDefend(Game& game) {
 
 	std::cout << "\nHow many die would you like to " <<
 	"defend with?" << std::endl;
@@ -162,11 +162,11 @@ Command* User::promptDefend(Game& game) {
 	unsigned numDie;
 	std::cin >> numDie;
 
-	return new DefendInit(*this, numDie);
+	return std::unique_ptr<Command>(new DefendInit(*this, numDie));
 }
 
 
-Command* User::promptVictoryMove(Game& game) {
+std::unique_ptr<Command> User::promptVictoryMove(Game& game) {
 	std::cout << "\nVICTORY! How many armies " <<
 		"do you want to move from " << game.attackState.origin->name <<
 		" to " << game.attackState.target->name << 
@@ -176,7 +176,7 @@ Command* User::promptVictoryMove(Game& game) {
 	unsigned numArmies;
 	std::cin >> numArmies;
 
-	return new VictoryArmyMove(*this, numArmies);
+	return std::unique_ptr<Command>(new VictoryArmyMove(*this, numArmies));
 };
 
 
@@ -197,12 +197,12 @@ Territory* User::terrFromStr(Game& game, std::string const& name) {
         }));
 
     if (terr == &(*game.getTerritories().end()))
-    	throw std::exception("Territory not found");
+    	throw std::exception();
 
     return terr;
 }
 
-Command* User::promptPlayCards(Game& game) {
+std::unique_ptr<Command> User::promptPlayCards(Game& game) {
 	
 	std::cout << "Would you like to play any cards?" <<
 		" You must play cards if you have 5 cards. (y/n)" <<
@@ -231,7 +231,7 @@ Command* User::promptPlayCards(Game& game) {
 	std::cin >> in;
 
 	if (in == "n") {
-		return new EndTurn(*this);
+		return std::unique_ptr<Command>(new EndTurn(*this));
 	} else if (in != "y") {
 		commandError = true;
 
@@ -247,5 +247,6 @@ Command* User::promptPlayCards(Game& game) {
 		std::cin >> name;
 	}
 
-	return new PlayCards(*this, cardNames);
+	return std::unique_ptr<Command>(new PlayCards(*this, cardNames));
 }
+

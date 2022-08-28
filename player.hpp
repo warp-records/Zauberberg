@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #pragma once
 
@@ -28,10 +29,10 @@ struct Player {
 	//For defend command only
 	int numDiceUsing;
 
-	virtual Command* getCommand(Game& game) = 0;
+	virtual std::unique_ptr<Command> getCommand(Game& game) = 0;
 
-	Player(std::string const& _name, Color _color) : 
-		name{_name}, color{_color} {};
+	Player(std::string const& name_, Color color_) : 
+		name{name_}, color{color_} {};
 };
 
 
@@ -40,16 +41,16 @@ struct User : public Player {
 
 	using Player::Player;
 	
-	Command* getCommand(Game& game);
+	std::unique_ptr<Command> getCommand(Game& game);
 
 private:
 	//Human IO
-	Command* promptPlaceArmies(Game& game);
-	Command* promptFreeMove(Game& game);
-	Command* promptAttack(Game& game);
-	Command* promptDefend(Game& game);
-	Command* promptVictoryMove(Game& game);
-	Command* promptPlayCards(Game& game);
+	std::unique_ptr<Command> promptPlaceArmies(Game& game);
+	std::unique_ptr<Command> promptFreeMove(Game& game);
+	std::unique_ptr<Command> promptAttack(Game& game);
+	std::unique_ptr<Command> promptDefend(Game& game);
+	std::unique_ptr<Command> promptVictoryMove(Game& game);
+	std::unique_ptr<Command> promptPlayCards(Game& game);
 
 	Territory* terrFromStr(Game& game, std::string const& name);
 

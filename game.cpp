@@ -22,7 +22,7 @@ auto searchTerrName(
 
 Game::Game(int numPlayers) {
 	if (numPlayers < 1 || 6 < numPlayers)
-		throw std::exception("Invalid number of players");
+		throw std::exception();
 
 	territories = genLandData();
 
@@ -137,7 +137,7 @@ void Game::doTurn() {
 		plr->commandError ||
 		plr->cards.size() == 5) {
 
-		Command* cmd (plr->getCommand(*this));
+		std::unique_ptr<Command> cmd (plr->getCommand(*this));
 		plr->commandError = !cmd->Execute(*this);
 
 	};
